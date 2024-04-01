@@ -9,7 +9,7 @@
     text-color="#fff"
     active-text-color="#ffd04b"
   >
-    <h3>行程时间管理系统</h3>
+    <h3>{{isCollapse ? '行程管理' : '行程时间管理系统'}}</h3>
     <el-menu-item
       v-for="item in noChildren"
       :key="item.name"
@@ -66,7 +66,7 @@
 export default {
   data() {
     return {
-      isCollapse: false,
+      
       menuData: [
         {
           path: "/",
@@ -173,6 +173,9 @@ export default {
     isUser() {
       return this.menuData.filter((item) => item.name !== "user");
     },
+    isCollapse(){
+      return this.$store.state.tab.isCollapse
+    }
   },
 };
 </script>
