@@ -2,7 +2,7 @@
 node_modules
 /dist
 /src/static/data
-
+学习ajax
 # local env files
 .env.local
 .env.*.local

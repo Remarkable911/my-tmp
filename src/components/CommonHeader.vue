@@ -2,7 +2,7 @@
   <div class="header-container">
     <div class="l-content">
       <el-button @click="handlerMenu" icon="el-icon-menu" size="mini"></el-button>
-      <span class="text">首页</span>
+      <span class="text"></span>
     </div>
     <div class="r-content">
       <el-dropdown>
@@ -21,7 +21,9 @@
 <script>
 export default {
   data() {
-    return {}
+    return {
+      
+    }
   },
   methods:{
     handlerMenu(){

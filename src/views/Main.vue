@@ -22,7 +22,9 @@ import CommonHeader from '../components/CommonHeader.vue'
 
 export default {
     data(){
-        return {}
+        return {
+          
+        }
     },
     components:{
         CommonAside,
