@@ -45,7 +45,13 @@
     </el-form>
     <!-- 表格控件（无边框，可悬停，有切换页码） -->
     <el-table :data="tableData" style="width: 100%">
-      <el-table-column v-for="(val, key) in tableLabel" :key="key" :prop="key" :label="val" width="160" />
+      <el-table-column
+        v-for="(val, key) in tableLabel"
+        :key="key"
+        :prop="key"
+        :label="val"
+        width="160"
+      />
 
       <el-table-column label="操作" width="100">
         <template slot-scope="scope">
@@ -60,6 +66,7 @@
 </template>
 
 <script>
+
 export default {
   data() {
     return {
@@ -72,14 +79,14 @@ export default {
         rule: "",
         status: "",
       },
-      tableLabel:{
-        username:"用户名",
-        id:"账号",
-        gender:"性别",
-        phone:"手机号",
-        email:"邮箱",
-        rule:"角色",
-        status:"状态",
+      tableLabel: {
+        username: "用户名",
+        id: "账号",
+        gender: "性别",
+        phone: "手机号",
+        email: "邮箱",
+        rule: "角色",
+        status: "状态",
       },
       tableData: [
         {
@@ -93,27 +100,18 @@ export default {
           operate: "操作",
         },
       ],
-      BASEURL: "http://192.168.43.139:8000",
     };
   },
   methods: {
-    addUser() {
-      // 把form表单提交给后端
-      this.$axios
-        .post("BASEURL", this.form)
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
     resetForm() {
       this.$refs.form.resetFields();
     },
     handleClick(row) {
       console.log(row);
     },
+  },
+  mounted() {
+    
   },
 };
 </script>

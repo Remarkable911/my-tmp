@@ -12,6 +12,7 @@ import Process from '../views/Process.vue'
 import Statistics from '../views/Statistics.vue'
 import WeatherIn from '../views/WeatherIn.vue'
 import Custom from '../views/Custom.vue'
+import Login from '../views/Login.vue'
 Vue.use(VueRouter)
 // 2.将路由与组件进行映射
 const routes = [
@@ -67,6 +68,10 @@ const routes = [
             }
 
         ]
+    },
+    {
+        path: '/login',
+        component: Login
     },
     
 

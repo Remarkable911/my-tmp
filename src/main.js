@@ -9,7 +9,7 @@ import './tailwind.css'
 import 'bootstrap/dist/css/bootstrap.css'
 import 'bootstrap/dist/js/bootstrap.bundle'
 import axios from 'axios'
-
+import './api/mock'
 
 Vue.config.productionTip = false
 Vue.use(Element)

@@ -153,7 +153,7 @@ export default {
       if(this.$route.path !== item.path && !(this.$route.path === '/home' && item.path === '/')){
         this.$router.push(item.path);
       }
-      
+      this.$store.commit('selectTab', item);
     }
   },
   computed: {
@@ -164,14 +164,6 @@ export default {
     // 无子菜单
     noChildren() {
       return this.menuData.filter((item) => !item.children);
-    },
-    // 管理员
-    isAdmin() {
-      return this.menuData.filter((item) => item.name !== "home");
-    },
-    // 普通用户
-    isUser() {
-      return this.menuData.filter((item) => item.name !== "user");
     },
     isCollapse(){
       return this.$store.state.tab.isCollapse

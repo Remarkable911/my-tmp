@@ -1,8 +1,12 @@
 <template>
   <div class="header-container">
     <div class="l-content">
-      <el-button @click="handlerMenu" icon="el-icon-menu" size="mini"></el-button>
-      <span class="text"></span>
+      <el-button
+        @click="handlerMenu"
+        icon="el-icon-menu"
+        size="mini"
+      ></el-button>
+        <span class="text" v-for="item in tag" :key="item.path" :to="{ path: item.path }">{{item.label}}</span>
     </div>
     <div class="r-content">
       <el-dropdown>
@@ -19,16 +23,23 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
-    return {
-      
-    }
+    return {};
   },
-  methods:{
-    handlerMenu(){
-      this.$store.commit('collapseMenu')
-    }
+  methods: {
+    handlerMenu() {
+      this.$store.commit("collapseMenu");
+    },
+  },
+  computed:{
+    ...mapState({
+      tag:state => state.tab.tabList
+    })
+  },
+  mounted(){
+    // console.log(this.tag)
   }
 };
 </script>
