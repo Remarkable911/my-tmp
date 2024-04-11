@@ -1,5 +1,5 @@
 <template>
-  <h1>weather</h1>
+  <h1>kmeans</h1>
 </template>
 
 <script>

@@ -1,5 +1,7 @@
 <template>
-  <h1>link</h1>
+  <div>
+    <span>不合法值，空值，重复值，残缺值</span>
+  </div>
 </template>
 
 <script>

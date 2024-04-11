@@ -28,7 +28,7 @@ export default {
     },
     components:{
         CommonAside,
-        CommonHeader
+        CommonHeader,
     }
 };
 </script>

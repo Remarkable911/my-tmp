@@ -4,6 +4,8 @@ node_modules
 /src/static/data
 学习ajax
 原生html
+项目理解
+giscup_2021源码
 # local env files
 .env.local
 .env.*.local

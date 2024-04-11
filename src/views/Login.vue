@@ -30,7 +30,8 @@
 </template>
 
 <script>
-import Mock from "mockjs";
+import Mock from "mockjs"
+import Cookie from "js-cookie"
 export default {
   data() {
     
@@ -52,7 +53,13 @@ export default {
     login() {
       // token信息
       const token = Mock.Random.guid();
-      console.log(token);
+      // token信息存入cookie用于不同页面间的通信
+      Cookie.set('token',token);
+      this.$router.push('/home');
+      // console.log(token);
+      if(0){
+        this.$message.error("用户名或密码错误");
+      }
     },
   },
 };

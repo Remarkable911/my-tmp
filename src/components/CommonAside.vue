@@ -88,18 +88,18 @@ export default {
           icon: "s-data",
           children: [
             {
-              path: "/weather",
-              name: "weather-in",
-              label: "天气导入",
-              icon: "sunny",
-              url: "Weather/Weather",
-            },
-            {
               path: "/order",
               name: "order-in",
               label: "订单导入",
               icon: "truck",
               url: "Order/Order",
+            },
+            {
+              path: "/weather",
+              name: "weather-in",
+              label: "天气导入",
+              icon: "sunny",
+              url: "Weather/Weather",
             },
             {
               path: "/link",
@@ -109,20 +109,40 @@ export default {
               url: "Link/Link",
             },
             {
-              path: "/custom",
-              name: "custom-in",
-              label: "自定义导入",
+              path: "/cross",
+              name: "cross-in",
+              label: "路口导入",
               icon: "news",
-              url: "Custom/Custom",
+              url: "Cross/Cross",
             },
           ],
         },
         {
           path: "/clear",
-          name: "clear",
           label: "数据清洗",
           icon: "folder",
-          url: "Clear/Clear",
+          children: [
+            {
+              path: "/abnormal",
+              name: "abnormal",
+              label: "异常数据清理",
+              icon: "sunny",
+              url: "Abnormal/Abnormal",
+            },
+            {
+              path: "/merge",
+              name: "merge",
+              label: "道路合并",
+              icon: "truck",
+              url: "Merge/Merge",
+            },
+            {
+              path: "/kmeans",
+              name: "kmeans",
+              label: "路网聚类",
+              icon: "link",
+              url: "Kmeans/Kmeans",
+            }]
         },
         {
           path: "/statistics",
