@@ -66,7 +66,7 @@
 </template>
 
 <script>
-
+import { getUser, postUser } from "../api";
 export default {
   data() {
     return {
@@ -103,6 +103,19 @@ export default {
     };
   },
   methods: {
+    addUser() {
+      postUser(this.form).then(({ data }) => {
+        if (data.code === 404) {
+          this.$message.error("添加失败");
+        } else {
+          this.$message.success("添加成功");
+          getUser().then((res) => {
+            const { userTable } = res.data.data;
+            this.tableData = userTable;
+          });
+        }
+      });
+    },
     resetForm() {
       this.$refs.form.resetFields();
     },
@@ -111,7 +124,10 @@ export default {
     },
   },
   mounted() {
-    
+    getUser().then((res) => {
+      const { userTable } = res.data.data;
+      this.tableData = userTable;
+    });
   },
 };
 </script>

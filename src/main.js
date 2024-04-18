@@ -17,8 +17,6 @@ Vue.use(Element)
 Vue.prototype.$echarts = echarts
 Vue.prototype.$axios = axios
 
-// 
-
 new Vue({
   router,
   store,

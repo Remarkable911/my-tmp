@@ -1,7 +1,6 @@
 import Mock from "mockjs";
-
-Mock.mock('http://192.168.43.139:8000/home/getData', 'get', function () {
-    // console.log('http://192.168.43.139:8000/home/getData')
+import mockServe from "./mockServe";
+Mock.mock('/api/home', 'get', function () {
     return {
         code: 200,
         data: {
@@ -33,8 +32,8 @@ Mock.mock('http://192.168.43.139:8000/home/getData', 'get', function () {
                     }
                 ]
             }
-
-
         }
     }
 })
+Mock.mock('/api/login','post',mockServe.postLogin)
+

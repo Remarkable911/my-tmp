@@ -14,7 +14,7 @@ import Predict from '../views/Predict.vue'
 import Process from '../views/Process.vue'
 import Statistics from '../views/Statistics.vue'
 import WeatherIn from '../views/DataImport/WeatherIn.vue'
-import Cross from '../views/DataImport/CrossIn.vue'
+import CrossIn from '../views/DataImport/CrossIn.vue'
 import Login from '../views/Login.vue'
 Vue.use(VueRouter)
 // 2.将路由与组件进行映射
@@ -80,14 +80,9 @@ const routes = [
                 component: WeatherIn
             },
             {
-                path: 'order',
-                name: 'order',
-                component: OrderIn
-            },
-            {
                 path: 'cross',
                 name: 'cross',
-                component: Cross
+                component: CrossIn
             }
 
         ]

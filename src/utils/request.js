@@ -1,20 +1,23 @@
 import axios from 'axios'
-
-const http=axios.create({
-    baseURL: 'http://192.168.43.139:8000',
+import nProgress from 'nprogress';
+import 'nprogress/nprogress.css';
+const request=axios.create({
+    baseURL: '/api',
     timeout: 100000,
 
 })
 // 添加请求拦截器
-http.interceptors.request.use(config => {
+request.interceptors.request.use(config => {
+    nProgress.start();
     return config;
 },function(error){
     return Promise.reject(error);
 });
 // 添加响应拦截器
-http.interceptors.response.use(res => {
+request.interceptors.response.use(res => {
+    nProgress.done();
     return res;
 },function(error){
     return Promise.reject(error);
 });
-export default http;
+export default request;

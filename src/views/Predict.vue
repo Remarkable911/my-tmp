@@ -14,12 +14,12 @@
           <el-input v-model="linkForm.endId" placeholder="路段终点"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="linkQuery">查询</el-button>
+          <el-button type="primary" @click="linkQuery1">查询</el-button>
           <el-button @click="resetLinkForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div class="firstResult"></div>
+    <div :model="firstResult"></div>
     <div class="mt-4">
       <h2>总体估值</h2>
       <el-form :inline="true" :model="allForm" ref="allForm">
@@ -53,16 +53,17 @@
           </el-select>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="linkQuery">查询</el-button>
+          <el-button type="primary" @click="allQuery">查询</el-button>
           <el-button @click="resetAllForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div class="secondResult"></div>
+    <div :model="secondResult"></div>
   </div>
 </template>
 
 <script>
+import { postPredict1,postPredict2} from "../api";
 export default {
   data() {
     return {
@@ -85,7 +86,17 @@ export default {
       },{
         value:'15',
         label:'15分钟',
-      }]
+      }],
+      firstResult:{
+        start:"",
+        end:"",
+        time:"",
+      },
+      secondResult:{
+        start:"",
+        end:"",
+        time:""
+      }
     };
   },
   methods: {
@@ -96,7 +107,18 @@ export default {
       this.$refs.allForm.resetFields();
     },
     linkQuery() {
-      console.log("submit!");
+      console.log("路段估值");
+      postPredict1(this.linkForm).then((res1) => {
+        const { result1 } =res1.data.data;
+        this.firstResult=result1;
+      })
+    },
+    allQuery(){
+      console.log("总体估值")
+      postPredict2(this.allForm).then((res2) => {
+        const { result2 } =res2.data.data;
+        this.secondResult=result2;
+      })
     },
     // 将分钟数转换为 'hh:mm' 格式
     minutesToHHMM(minutes) {

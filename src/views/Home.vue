@@ -23,17 +23,16 @@
         <el-card class="box-card h-56">
           <!-- link路段的车流量统计（link表中的linkid的count值）表格 -->
           <div ref="linkTraffic" class="h-56 bg-slate-300"></div>
-          
         </el-card>
       </el-col>
       <el-col :span="17">
         <el-card class="box-card mb-4 h-96">
           <!-- 把路段表放在这儿 -->
-          <div ref="linkNet" class=" h-80 bg-slate-300"></div>
+          <div ref="linkNet" class="h-80 bg-slate-300"></div>
           <el-button type="primary">更新数据</el-button>
         </el-card>
         <el-card class="box-card">
-          <div ref="weatherNet" class=" h-16 bg-slate-300"></div>
+          <div ref="weatherNet" class="h-16 bg-slate-300"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -41,7 +40,7 @@
 </template>
 
 <script>
-import { getHomeData } from "../api";
+import { getHome } from "../api";
 import * as echarts from "echarts";
 export default {
   data() {
@@ -55,7 +54,7 @@ export default {
   methods: {},
   computed: {},
   mounted() {
-    getHomeData().then((res) => {
+    getHome().then((res) => {
       // console.log(res);
       const { orderNum, addOrder, link, linkTable, netTable } = res.data.data;
       const linkTraffic = echarts.init(this.$refs.linkTraffic);

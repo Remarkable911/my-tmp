@@ -7,6 +7,7 @@
         class="flex flex-col item-center px-16"
         :model="loginForm"
         :rules="loginRules"
+        ref="loginForm"
       >
         <span class="loginTitle text-center mb-4 text-lg">登录页面</span>
         <el-form-item label="用户名:" prop="username">
@@ -23,18 +24,19 @@
             @keyup.enter.native="login"
           ></el-input>
         </el-form-item>
-          <el-button class="mx-16" type="primary" @click.native.prevent="login">登录</el-button>
+        <el-button class="mx-16" type="primary" @click.native.prevent="login"
+          >登录</el-button
+        >
       </el-form>
     </el-card>
   </div>
 </template>
 
 <script>
-import Mock from "mockjs"
-import Cookie from "js-cookie"
+import { postLogin } from "../api";
+import Cookie from 'js-cookie';
 export default {
   data() {
-    
     return {
       loginForm: {
         username: "",
@@ -51,20 +53,26 @@ export default {
   methods: {
     // 登录
     login() {
-      // token信息
-      const token = Mock.Random.guid();
-      // token信息存入cookie用于不同页面间的通信
-      Cookie.set('token',token);
-      this.$router.push('/home');
-      // console.log(token);
-      if(0){
-        this.$message.error("用户名或密码错误");
-      }
+      this.$refs.loginForm.validate((valid) => {
+        if (valid) {
+          postLogin(this.loginForm).then(({data})=>{
+            // console.log(data)
+            if(data.code === 404){
+              this.$message.error("登录失败")
+            }
+            else{
+              Cookie.set('token', data.username)
+              this.$router.push('/home')
+            }
+          })
+        }
+      });
     },
   },
+  mounted() {
+  }
 };
 </script>
 
 <style>
-
 </style>
