@@ -6,8 +6,8 @@
         <el-form-item label="用户名：" prop="username" class="col mb-2">
           <el-input v-model="form.username"></el-input>
         </el-form-item>
-        <el-form-item label="账号：" prop="id" class="col mb-2">
-          <el-input v-model="form.id"></el-input>
+        <el-form-item label="账号：" prop="account" class="col mb-2">
+          <el-input v-model="form.account"></el-input>
         </el-form-item>
         <el-form-item label="性别：" prop="gender" class="col mb-2">
           <el-radio-group v-model="form.gender">
@@ -38,7 +38,8 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item class="col mb-2">
-          <el-button type="primary" @click="addUser">添加</el-button>
+          <el-button type="
+          " @click="addUser">添加</el-button>
           <el-button @click="resetForm">重置</el-button>
         </el-form-item>
       </div>
@@ -72,7 +73,7 @@ export default {
     return {
       form: {
         username: "",
-        id: "",
+        account: "",
         gender: "",
         phone: "",
         email: "",
@@ -81,25 +82,14 @@ export default {
       },
       tableLabel: {
         username: "用户名",
-        id: "账号",
+        account: "账号",
         gender: "性别",
         phone: "手机号",
         email: "邮箱",
         rule: "角色",
         status: "状态",
       },
-      tableData: [
-        {
-          username: "张三",
-          id: "123",
-          gender: "男",
-          phone: "13800000000",
-          email: "<EMAIL>",
-          rule: "普通用户",
-          status: "正常",
-          operate: "操作",
-        },
-      ],
+      userTable: [],
     };
   },
   methods: {
@@ -110,8 +100,7 @@ export default {
         } else {
           this.$message.success("添加成功");
           getUser().then((res) => {
-            const { userTable } = res.data.data;
-            this.tableData = userTable;
+            this.userTable  = res.data.data;
           });
         }
       });
@@ -129,6 +118,32 @@ export default {
       this.tableData = userTable;
     });
   },
+  computed:{
+    tableData(){
+      return this.userTable.map(item=>{
+        let rule = '';
+      switch (item.rule) {
+        case 1:
+          rule = '系统管理员';
+          break;
+        case 2:
+          rule = '权限管理员';
+          break;
+        case 3:
+          rule = '用户';
+          break;
+        default:
+          rule = '未知';
+          break;
+      }
+        return {
+          ...item,
+          gender: item.gender === 1 ? "男" : "女",
+          rule: rule,
+        }
+      })
+    }
+  }
 };
 </script>
 

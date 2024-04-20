@@ -2,7 +2,7 @@ import axios from 'axios'
 import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 const request=axios.create({
-    baseURL: '/api',
+    baseURL: 'http://127.0.0.1:5000',
     timeout: 100000,
 
 })

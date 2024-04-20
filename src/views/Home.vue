@@ -7,7 +7,7 @@
             <span>收录订单总数：{{ orderNum }}</span>
           </div>
           <div>
-            <span>今日新增订单：{{ addOrder }}</span>
+            <span>今日新增订单：{{ todayNum }}</span>
           </div>
         </el-card>
         <el-card class="box-card mb-4">
@@ -29,7 +29,7 @@
         <el-card class="box-card mb-4 h-96">
           <!-- 把路段表放在这儿 -->
           <div ref="linkNet" class="h-80 bg-slate-300"></div>
-          <el-button type="primary">更新数据</el-button>
+          <el-button type="primary" @click="updateNet">更新数据</el-button>
         </el-card>
         <el-card class="box-card">
           <div ref="weatherNet" class="h-16 bg-slate-300"></div>
@@ -40,40 +40,61 @@
 </template>
 
 <script>
+import axios from "axios";
 import { getHome } from "../api";
 import * as echarts from "echarts";
 export default {
   data() {
     return {
       orderNum: "",
-      addOrder: "",
+      todayNum: "",
       link: { linkId: "", linkTime: "", linkStatus: "" },
     };
   },
   components: {},
-  methods: {},
+  methods: {
+    drawChart(){
+      
+    },
+    updateNet(){
+
+    }
+  },
   computed: {},
   mounted() {
     getHome().then((res) => {
       // console.log(res);
-      const { orderNum, addOrder, link, linkTable, netTable } = res.data.data;
+      const { link,linkFlow,orderNum, todayNum } = res.data.data;
       const linkTraffic = echarts.init(this.$refs.linkTraffic);
-      const linkNet = echarts.init(this.$refs.linkNet);
       // 车流量柱状图
       let optionTraffic = {
         title: {
           text: "link路段车流量统计",
         },
         xAxis: {
-          data: linkTable.map((item) => item.linkId),
+          data: linkFlow.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           name: "车流量统计",
           type: "bar",
-          data: linkTable.map((item) => item.linkTraffic),
+          data: linkFlow.map((item) => item.link_count),
         },
       };
+      // 天气图
+      // console.log(optionTraffic);
+      linkTraffic.setOption(optionTraffic);
+      this.$set(this, "orderNum", orderNum); //将orderNum和addOrder放到data中，这样就可以直接在页面中使用
+      this.$set(this, "todayNum", todayNum);
+      this.$set(this, "link", link);
+      // console.log(orderNum, addOrder, link, linkTable, netTable);
+    });
+    const linkNet = echarts.init(this.$refs.linkNet);
+    linkNet.showLoading();
+    axios.get('/src/static/data/data.json').then(res => {
+      const netTable =res.data;
+      console.log(res.data)
+      linkNet.hideLoading();
       // 轨迹路线图
       let optionNet = {
         renderer: "webgl", // 设置渲染器为 WebGL
@@ -113,14 +134,7 @@ export default {
           },
         ],
       };
-      // 天气图
-      // console.log(optionTraffic);
-      linkTraffic.setOption(optionTraffic);
       linkNet.setOption(optionNet);
-      this.$set(this, "orderNum", orderNum); //将orderNum和addOrder放到data中，这样就可以直接在页面中使用
-      this.$set(this, "addOrder", addOrder);
-      this.$set(this, "link", link);
-      // console.log(orderNum, addOrder, link, linkTable, netTable);
     });
   },
 };
