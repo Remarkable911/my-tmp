@@ -23,7 +23,6 @@ export default {
                 state.tabList.pop()
                 state.tabList.push(val)
             }
-            console.log(state.tabList)
         }
     }
 }

@@ -1,16 +1,5 @@
 <template>
   <div>
-    <h1>Statistics</h1>
-    通行时间最久，最短的cross
-    <br />
-    通行时间最久，最短的link
-    <br />
-    距离最长，最短的order
-    <br />
-    车流量最高的link
-    <br />
-    司机跑单最多
-
     <div class="row mb-4">
       <el-card class="col">
         <div ref="crossTime" class="h-56 bg-slate-300"></div>
@@ -45,10 +34,10 @@ export default {
     getStatistics().then((res) => {
       const {
         crossTimeTable,
-        linkTimeTable,
         disOrderTable,
-        linkFlowTable,
         driverRunTable,
+        linkFlowTable,
+        linkTimeTable,
       } = res.data.data;
       const crossTime = echarts.init(this.$refs.crossTime);
       const linkTime = echarts.init(this.$refs.linkTime);
@@ -61,12 +50,12 @@ export default {
         },
         tooltip: {},
         xAxis: {
-          data: crossTimeTable.map(item=>item.item.crossId),
+          data: crossTimeTable.desc.map((item) => item.crossid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: crossTimeTable.map(item=>item.time),
+          data: crossTimeTable.desc.map((item) => item.crosstime),
         },
       };
       let optionLinkTime = {
@@ -75,12 +64,12 @@ export default {
         },
         tooltip: {},
         xAxis: {
-          data: linkTimeTable.map(item=>item.item.linkId),
+          data: linkTimeTable.desc.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: linkTimeTable.map(item=>item.time),
+          data: linkTimeTable.desc.map((item) => item.linkavgtime),
         },
       };
       let optionDisOrder = {
@@ -89,12 +78,12 @@ export default {
         },
         tooltip: {},
         xAxis: {
-          data: disOrderTable.map(item=>item.item.orderId),
+          data: disOrderTable.desc.map((item) => item.orderid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: disOrderTable.map(item=>item.distance),
+          data: disOrderTable.desc.map((item) => item.distance),
         },
       };
       let optionLinkFlow = {
@@ -103,12 +92,12 @@ export default {
         },
         tooltip: {},
         xAxis: {
-          data: linkFlowTable.map(item=>item.linkId),
+          data: linkFlowTable.desc.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: linkFlowTable.map(item=>item.flow),
+          data: linkFlowTable.desc.map((item) => item.link_count),
         },
       };
       let optionDriveRun = {
@@ -117,12 +106,12 @@ export default {
         },
         tooltip: {},
         xAxis: {
-          data: driverRunTable.map(item=>item.driverId),
+          data: driverRunTable.desc.map((item) => item.driverid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: driverRunTable.map(item=>item.run),
+          data: driverRunTable.desc.map((item) => item.drive_count),
         },
       };
       crossTime.setOption(optionCrossTime);

@@ -26,13 +26,10 @@
         </el-card>
       </el-col>
       <el-col :span="17">
-        <el-card class="box-card mb-4 h-96">
+        <el-card class="box-card mb-4 netCard">
           <!-- 把路段表放在这儿 -->
-          <div ref="linkNet" class="h-80 bg-slate-300"></div>
+          <div ref="linkNet" class=" bg-slate-300 linkNet"></div>
           <el-button type="primary" @click="updateNet">更新数据</el-button>
-        </el-card>
-        <el-card class="box-card">
-          <div ref="weatherNet" class="h-16 bg-slate-300"></div>
         </el-card>
       </el-col>
     </el-row>
@@ -40,8 +37,7 @@
 </template>
 
 <script>
-import axios from "axios";
-import { getHome } from "../api";
+import { getHome,getNet,postNet } from "../api";
 import * as echarts from "echarts";
 export default {
   data() {
@@ -53,11 +49,10 @@ export default {
   },
   components: {},
   methods: {
-    drawChart(){
-      
-    },
     updateNet(){
-
+      postNet().then(
+        console.log("更新成功")
+      )
     }
   },
   computed: {},
@@ -91,9 +86,8 @@ export default {
     });
     const linkNet = echarts.init(this.$refs.linkNet);
     linkNet.showLoading();
-    axios.get('/src/static/data/data.json').then(res => {
+    getNet().then(res => {
       const netTable =res.data;
-      console.log(res.data)
       linkNet.hideLoading();
       // 轨迹路线图
       let optionNet = {
@@ -141,4 +135,7 @@ export default {
 </script>
 
 <style lang="less">
+.linkNet{
+  height: 542px;
+}
 </style>
