@@ -60,9 +60,23 @@ export default {
             if(data.code === 404){
               this.$message.error("登录失败")
             }
+            else if(data.data.status === 2){
+              this.$message.error("该用户已被禁用")
+            }
             else{
-              Cookie.set('token', data.username)
-              this.$router.push('/home')
+              Cookie.set('token', data.data.token)
+              this.$store.commit('setMenu',data.data.menu)
+              this.$store.commit('addMenu', this.$router)
+              this.$store.commit('setUser', data.data.username)
+              if (data.data.rule === 1){
+                this.$router.push('/home')
+              }
+              else if (data.data.rule === 2){
+                this.$router.push('/statistics')
+              }
+              else{
+                this.$router.push('/user')
+              }
             }
           })
         }

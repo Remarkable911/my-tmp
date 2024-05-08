@@ -63,110 +63,16 @@
 </style>
 
 <script>
+import Cookie from 'js-cookie';
 export default {
   data() {
-    return {
-      
-      menuData: [
-        {
-          path: "/",
-          name: "home",
-          label: "首页",
-          icon: "s-home",
-          url: "Home/Home",
-        },
-        {
-          path: "/user",
-          name: "user",
-          label: "用户管理",
-          icon: "user-solid",
-          url: "User/User",
-        },
-        {
-          path: "/process",
-          label: "数据处理",
-          icon: "s-data",
-          children: [
-            {
-              path: "/order",
-              name: "order-in",
-              label: "订单导入",
-              icon: "truck",
-              url: "Order/Order",
-            },
-            {
-              path: "/weather",
-              name: "weather-in",
-              label: "天气导入",
-              icon: "sunny",
-              url: "Weather/Weather",
-            },
-            {
-              path: "/link",
-              name: "link-in",
-              label: "路段导入",
-              icon: "link",
-              url: "Link/Link",
-            },
-            {
-              path: "/cross",
-              name: "cross-in",
-              label: "路口导入",
-              icon: "news",
-              url: "Cross/Cross",
-            },
-          ],
-        },
-        {
-          path: "/clear",
-          label: "数据清洗",
-          icon: "folder",
-          children: [
-            {
-              path: "/abnormal",
-              name: "abnormal",
-              label: "异常数据清理",
-              icon: "sunny",
-              url: "Abnormal/Abnormal",
-            },
-            {
-              path: "/merge",
-              name: "merge",
-              label: "道路合并",
-              icon: "truck",
-              url: "Merge/Merge",
-            },
-            {
-              path: "/kmeans",
-              name: "kmeans",
-              label: "路网聚类",
-              icon: "link",
-              url: "Kmeans/Kmeans",
-            }]
-        },
-        {
-          path: "/statistics",
-          name: "statistics",
-          label: "数据统计",
-          icon: "coordinate",
-          url: "Statistics/Statistics",
-        },
-        {
-          path: "/predict",
-          name: "predict",
-          label: "行程时间预测",
-          icon: "guide",
-          url: "Predict/Predict",
-        },
-      ],
-    };
+    return {};
   },
   methods: {
-    handleOpen(key, keyPath) {
-      console.log(key, keyPath);
+    handleOpen() {
+
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleClose() {
     },
     // 点击菜单
     clickMenu(item) {
@@ -184,6 +90,9 @@ export default {
     // 无子菜单
     noChildren() {
       return this.menuData.filter((item) => !item.children);
+    },
+    menuData(){
+      return JSON.parse(Cookie.get('menu')) || this.$store.state.tab.menu
     },
     isCollapse(){
       return this.$store.state.tab.isCollapse

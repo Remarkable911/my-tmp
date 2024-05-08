@@ -20,7 +20,7 @@
           <img src="../assets/images/user-default.jpeg" alt="" class="user" />
         </span>
         <el-dropdown-menu slot="dropdown">
-          <el-dropdown-item>个人中心</el-dropdown-item>
+          <el-dropdown-item>{{username}}</el-dropdown-item>
           <el-dropdown-item command="logout">退出</el-dropdown-item>
         </el-dropdown-menu>
       </el-dropdown>
@@ -33,7 +33,8 @@ import { mapState } from "vuex";
 import Cookie from "js-cookie";
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   methods: {
     handlerMenu() {
@@ -41,8 +42,9 @@ export default {
     },
     handleClick(command) {
       if (command === "logout") {
-        console.log("退出");
         Cookie.remove("token");
+        Cookie.remove("menu");
+        Cookie.remove("tabList");
         this.$router.push("/login");
       }
     },
@@ -50,10 +52,11 @@ export default {
   computed: {
     ...mapState({
       tag: (state) => state.tab.tabList,
+      username: (state) => state.tab.username,
     }),
   },
   mounted() {
-    // console.log(this.tag)
+    
   },
 };
 </script>

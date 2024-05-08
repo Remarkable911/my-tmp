@@ -14,7 +14,7 @@
       <div class="el-upload__tip" slot="tip">只能上传csv文件</div>
     </el-upload>
     <el-button type="primary">上传</el-button>
-    <el-form inline="true" ref="form" :model="form" label-width="80px">
+    <el-form :inline="true" ref="form" :model="form" label-width="80px">
       <el-form-item label="订单编号">
         <el-input v-model="form.orderId"></el-input>
       </el-form-item>
@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import { getCrossQuery } from "@/api"
 export default {
   data() {
     return {
@@ -43,23 +44,33 @@ export default {
       tableLabel: {
         // 路口编号	路口通行时间
         // 驶入路口编号	驶出路口编号	订单编号
-        orderId: "订单编号",
-        crossId: "路口编号",
-        crossTime: "路口通行时间",
-        inCrossId: "驶入路口编号",
-        outCrossId: "驶出路口编号",
+        orderid: "订单编号",
+        crossid: "路口编号",
+        crosstime: "路口通行时间",
+        entranceid: "驶入路口编号",
+        exitid: "驶出路口编号",
       },
       tableData: [
         {
-          orderId: "96043",
-          crossId: "100059_22577",
-          crossTime: "39.0",
-          inCrossId: "100059",
-          outCrossId: "22577",
+          orderid: "96043",
+          crossid: "100059_22577",
+          crosstime: "39.0",
+          entranceid: "100059",
+          exitid: "22577",
         },
       ],
     };
   },
+  methods:{
+    onSubmit(){
+
+    }
+  },
+  mounted(){
+    getCrossQuery().then(res=>{
+      this.tableData = res.data.data;
+    })
+  }
 };
 </script>
 

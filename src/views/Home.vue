@@ -28,7 +28,7 @@
       <el-col :span="17">
         <el-card class="box-card mb-4 netCard">
           <!-- 把路段表放在这儿 -->
-          <div ref="linkNet" class=" bg-slate-300 linkNet"></div>
+          <div ref="linkNet" class="bg-slate-300 linkNet"></div>
           <el-button type="primary" @click="updateNet">更新数据</el-button>
         </el-card>
       </el-col>
@@ -37,7 +37,7 @@
 </template>
 
 <script>
-import { getHome,getNet,postNet } from "../api";
+import { getHome, getNet, postNet } from "../api";
 import * as echarts from "echarts";
 export default {
   data() {
@@ -49,17 +49,15 @@ export default {
   },
   components: {},
   methods: {
-    updateNet(){
-      postNet().then(
-        console.log("更新成功")
-      )
-    }
+    updateNet() {
+      postNet().then(console.log("更新成功"));
+    },
   },
   computed: {},
   mounted() {
     getHome().then((res) => {
       // console.log(res);
-      const { link,linkFlow,orderNum, todayNum } = res.data.data;
+      const { link, linkFlow, orderNum, todayNum } = res.data.data;
       const linkTraffic = echarts.init(this.$refs.linkTraffic);
       // 车流量柱状图
       let optionTraffic = {
@@ -76,7 +74,6 @@ export default {
           data: linkFlow.map((item) => item.link_count),
         },
       };
-      // 天气图
       // console.log(optionTraffic);
       linkTraffic.setOption(optionTraffic);
       this.$set(this, "orderNum", orderNum); //将orderNum和addOrder放到data中，这样就可以直接在页面中使用
@@ -86,12 +83,16 @@ export default {
     });
     const linkNet = echarts.init(this.$refs.linkNet);
     linkNet.showLoading();
-    getNet().then(res => {
-      const netTable =res.data;
+    setTimeout(() => {
       linkNet.hideLoading();
+    }, 1000);
+    getNet().then((res) => {
+      const netTable = res.data;
+      console.log(netTable);
+
       // 轨迹路线图
       let optionNet = {
-        renderer: "webgl", // 设置渲染器为 WebGL
+        renderer: "canvas", // 设置渲染器为 WebGL
         // 设置图表标题
         title: {
           text: "轨迹路线图",
@@ -103,7 +104,7 @@ export default {
           {
             type: "graph",
             layout: "force",
-            roam: true, // 开启鼠标缩放和平移漫游功能
+            //roam: true, // 开启鼠标缩放和平移漫游功能
             // 设置节点数据
             force: {
               // 调整节点之间的排斥力，从而调整密度
@@ -135,7 +136,7 @@ export default {
 </script>
 
 <style lang="less">
-.linkNet{
+.linkNet {
   height: 542px;
 }
 </style>

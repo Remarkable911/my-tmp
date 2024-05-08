@@ -1,48 +1,62 @@
 <template>
   <div>
     <el-button type="primary">更新数据</el-button>
-    <div class="mt-4">
+    <div class="mt-4 mb-4">
       <h2>路段估值</h2>
-      <el-form :inline="true" :model="linkForm" ref="linkForm">
-        <el-form-item label="路段起点">
-          <el-input
-            v-model="linkForm.startId"
-            placeholder="路段起点"
-          ></el-input>
+      <el-form
+        :inline="true"
+        :model="linkForm"
+        ref="linkForm"
+        :rules="linkRule"
+      >
+        <el-form-item label="路段起点" prop="startLink">
+          <el-input v-model="linkForm.startLink"></el-input>
         </el-form-item>
-        <el-form-item label="路段终点">
-          <el-input v-model="linkForm.endId" placeholder="路段终点"></el-input>
+        <el-form-item label="路段终点" prop="endLink">
+          <el-input v-model="linkForm.endLink"></el-input>
         </el-form-item>
         <el-form-item>
-          <el-button type="primary" @click="linkQuery1">查询</el-button>
+          <el-button type="primary" @click="linkQuery">查询</el-button>
           <el-button @click="resetLinkForm">重置</el-button>
         </el-form-item>
       </el-form>
     </div>
-    <div :model="firstResult"></div>
+    <div>
+      <span v-if="linkRes" :model="firstResult">
+        查询结果：从{{ firstResult.startLink }}到达{{
+          firstResult.endLink
+        }}的时间预计为{{ firstResult.linkTime }}分钟<br />
+        {{ path }}
+      </span>
+      <span v-if="linkError"> 暂无历史数据 </span>
+    </div>
+    <el-divider></el-divider>
     <div class="mt-4">
       <h2>总体估值</h2>
-      <el-form :inline="true" :model="allForm" ref="allForm">
-        <el-form-item label="路段起点">
-          <el-input v-model="allForm.startId" placeholder="路段起点"></el-input>
+      <el-form :inline="true" :model="allForm" ref="allForm" :rules="allRule">
+        <el-form-item label="路段起点" prop="startLink">
+          <el-input v-model="allForm.startLink"></el-input>
         </el-form-item>
-        <el-form-item label="路段终点">
-          <el-input v-model="allForm.endId" placeholder="路段终点"></el-input>
+        <el-form-item label="路段终点" prop="endLink">
+          <el-input v-model="allForm.endLink"></el-input>
         </el-form-item>
-        <el-form-item label="出行时间">
+        <el-form-item label="出行时间" prop="time">
           <el-time-select
-            v-model="time"
+            v-model="allForm.time"
             :picker-options="{
               start: '00:00',
-              step: step,
+              step: '00:15',
               end: '24:00',
             }"
             placeholder="选择时间"
           >
           </el-time-select>
         </el-form-item>
-        <el-form-item label="时间片">
-          <el-select v-model="timeSliceValue" placeholder="请选择"  @change="updateStep">
+        <el-form-item label="时间片" prop="slice">
+          <el-select
+            v-model="allForm.slice"
+            placeholder="请选择"
+          >
             <el-option
               v-for="item in timeSlice"
               :key="item.value"
@@ -58,45 +72,108 @@
         </el-form-item>
       </el-form>
     </div>
-    <div :model="secondResult"></div>
+    <div>
+      <span v-if="allRes" :model="secondResult">
+        查询结果：从{{ secondResult.startLink }}到达{{ secondResult.endLink }}
+        的时间预计为{{ secondResult.average_ata }}分钟
+      </span>
+      <span v-if="allError"> 暂无历史数据 </span>
+    </div>
   </div>
 </template>
 
 <script>
-import { postPredict1,postPredict2} from "../api";
+import { postPredict1, postPredict2 } from "../api";
 export default {
   data() {
     return {
+      methods: 0,
+      step:"00:15",
       linkForm: {
-        startId: "",
-        endId: "",
+        startLink: "",
+        endLink: "",
       },
+      linkRule: {
+        startLink: [
+          {
+            required: true,
+            message: "请输入起点",
+            trigger: "blur",
+          },
+        ],
+        endLink: [
+          {
+            required: true,
+            message: "请输入终点",
+            trigger: "blur",
+          },
+        ],
+      },
+      firstResult: {
+        startLink: "",
+        endLink: "",
+        linkTime: "",
+        path: [],
+      },
+      linkRes: false,
+      linkError: false,
       allForm: {
-        startId: "",
-        endId: "",
+        startLink: "",
+        endLink: "",
+        time: "08:00",
+        slice: "",
       },
-      time: "08:00",
-      timeSliceValue:"",
-      timeSlice:[{
-        value:'60',
-        label:'60分钟',
-      },{
-        value:'30',
-        label:'30分钟',
-      },{
-        value:'15',
-        label:'15分钟',
-      }],
-      firstResult:{
-        start:"",
-        end:"",
-        time:"",
+      allRule: {
+        startLink: [
+          {
+            required: true,
+            message: "请输入起点",
+            trigger: "blur",
+          },
+        ],
+        endLink: [
+          {
+            required: true,
+            message: "请输入终点",
+            trigger: "blur",
+          },
+        ],
+        time: [
+          {
+            required: true,
+            message: "请选择时间",
+            trigger: "blur",
+          },
+        ],
+        slice: [
+          {
+            required: true,
+            message: "请选择时间片",
+            trigger: "blur",
+          },
+        ],
       },
-      secondResult:{
-        start:"",
-        end:"",
-        time:""
-      }
+      allRes: false,
+      allError: false,
+      secondResult: {
+        startLink: "",
+        endLink: "",
+        average_ata: "",
+      },
+      timeSlice: [
+        {
+          value: "60",
+          label: "60分钟",
+        },
+        {
+          value: "30",
+          label: "30分钟",
+        },
+        {
+          value: "15",
+          label: "15分钟",
+        },
+      ],
     };
   },
   methods: {
@@ -107,41 +184,45 @@ export default {
       this.$refs.allForm.resetFields();
     },
     linkQuery() {
-      console.log("路段估值");
-      postPredict1(this.linkForm).then((res1) => {
-        const { result1 } =res1.data.data;
-        this.firstResult=result1;
-      })
-    },
-    allQuery(){
-      console.log("总体估值")
-      postPredict2(this.allForm).then((res2) => {
-        const { result2 } =res2.data.data;
-        this.secondResult=result2;
-      })
-    },
-    // 将分钟数转换为 'hh:mm' 格式
-    minutesToHHMM(minutes) {
-      const hours = Math.floor(minutes / 60);
-      const mins = minutes % 60;
-      return `${String(hours).padStart(2, '0')}:${String(mins).padStart(2, '0')}`;
-    },
-    // 当选择的时间片变化时更新 step 值
-    updateStep() {
-      this.$nextTick(() => {
-        // 更新 el-time-select 的 step 属性
-        // 使用 this.$refs.timeSelect 更新 el-time-select 的 step 属性
-        this.$refs.timeSelect.updatePickerOptions({
-          step: this.step
-        });
+      this.$refs.linkForm.validate((valid) => {
+        if (valid) {
+          postPredict1(this.linkForm).then((res) => {
+            this.firstResult = res.data.data;
+            if (this.firstResult.linkTime === "Infinity") {
+              this.linkRes = false;
+              this.linkError = true;
+            } else {
+              this.linkRes = true;
+              this.linkError = false;
+            }
+          });
+        }
       });
-    }
+    },
+    allQuery() {
+      this.$refs.allForm.validate((valid) => {
+        if (valid) {
+          postPredict2(this.allForm).then((res) => {
+            this.secondResult = res.data.data;
+            console.log(res.data);
+            console.log(this.secondResult);
+            if (this.secondResult.average_ata === null) {
+              this.allRes = false;
+              this.allError = true;
+            } else {
+              this.allRes = true;
+              this.allError = false;
+            }
+          });
+        }
+      });
+    },
   },
   computed: {
-    step() {
-      // 根据选择的时间片值计算 step 值（格式为 'hh:mm'）
-      return this.timeSliceValue ? this.minutesToHHMM(this.timeSliceValue) : '00:15';
-    }
+    
+    path() {
+      return "路线为：" + this.firstResult.path.join("->");
+    },
   },
 };
 </script>

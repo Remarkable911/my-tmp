@@ -38,9 +38,45 @@ export const getStatistics = (params) =>{
 }
 // 预测
 export const postPredict1 =(data)=>{
-  return request.post('/predict/1',data)
+  return request.post('/forecast/1',data)
 }
 export const postPredict2 =(data)=>{
-  return request.post('/predict/2',data)
+  return request.post('/forecast/2',data)
 }
-// 导入 需要文件提交
+// 查询
+export const getOrderQuery =(params)=>{
+  return request.get('/order/query',params)
+}
+export const getWeatherQuery =(params)=>{
+  return request.get('/weather/query',params)
+}
+export const getLinkQuery =(params)=>{
+  return request.get('/link/query',params)
+}
+export const getCrossQuery =(params)=>{
+  return request.get('/cross/query',params)
+}
+export const postOrderQuery =(data)=>{
+  return request.post('/order/query',data)
+}
+export const postWeatherQuery =(data)=>{
+  return request.post('/weather/query',data)
+}
+export const postLinkQuery =(data)=>{
+  return request.post('/link/query',data)
+}
+export const postCrossQuery =(data)=>{
+  return request.post('/cross/query',data)
+}
+// 导入
+
+//异常数据处理
+export const getCrossAbnormal =(params)=>{
+  return request.get('/abnormal/cross',params)
+}
+export const getLinkAbnormal =(params)=>{
+  return request.get('/abnormal/link',params)
+}
+export const getOrderAbnormal =(params)=>{
+  return request.get('/abnormal/order',params)
+}
