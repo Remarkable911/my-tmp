@@ -7,6 +7,9 @@ export const postLogin =(data)=>{
 export const getHome = (params) =>{
   return request.get('/home',params)
 }
+export const postHome =(data)=>{
+  return request.post('/home',data)
+}
 export const getNet = (params) =>{
   return request.get('/net',params)
 }
@@ -79,4 +82,14 @@ export const getLinkAbnormal =(params)=>{
 }
 export const getOrderAbnormal =(params)=>{
   return request.get('/abnormal/order',params)
+}
+// 合并
+export const getMerge =(params)=>{
+  return request.get('/merge',params)
+}
+export const postMerge =(data)=>{
+  return request.post('/merge',data)
+}
+export const postMergeQuery =(data)=>{
+  return request.post('/merge2',data)
 }

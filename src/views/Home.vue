@@ -14,9 +14,9 @@
           <div>
             <span>link信息：</span>
             <div>
-              <h6>id:{{ link["linkId"] }}</h6>
-              <h6>平均用时:{{ link["linkTime"] }}</h6>
-              <h6>通行状态:{{ link["linkStatus"] }}</h6>
+              <h6>id:{{ link.linkid }}</h6>
+              <h6>平均用时:{{ link.linkavgtime }}</h6>
+              <h6>通行状态:{{ link.avgstatus }}</h6>
             </div>
           </div>
         </el-card>
@@ -29,7 +29,6 @@
         <el-card class="box-card mb-4 netCard">
           <!-- 把路段表放在这儿 -->
           <div ref="linkNet" class="bg-slate-300 linkNet"></div>
-          <el-button type="primary" @click="updateNet">更新数据</el-button>
         </el-card>
       </el-col>
     </el-row>
@@ -37,27 +36,23 @@
 </template>
 
 <script>
-import { getHome, getNet, postNet } from "../api";
+import { getHome, getNet, postHome } from "@/api";
 import * as echarts from "echarts";
 export default {
   data() {
     return {
       orderNum: "",
       todayNum: "",
-      link: { linkId: "", linkTime: "", linkStatus: "" },
+      link: { linkid: "2", linkavgtime: "19.3436", avgstatus: "1" },
     };
   },
   components: {},
-  methods: {
-    updateNet() {
-      postNet().then(console.log("更新成功"));
-    },
-  },
+  methods: {},
   computed: {},
   mounted() {
     getHome().then((res) => {
       // console.log(res);
-      const { link, linkFlow, orderNum, todayNum } = res.data.data;
+      const { linkFlow, orderNum, todayNum } = res.data.data;
       const linkTraffic = echarts.init(this.$refs.linkTraffic);
       // 车流量柱状图
       let optionTraffic = {
@@ -78,7 +73,6 @@ export default {
       linkTraffic.setOption(optionTraffic);
       this.$set(this, "orderNum", orderNum); //将orderNum和addOrder放到data中，这样就可以直接在页面中使用
       this.$set(this, "todayNum", todayNum);
-      this.$set(this, "link", link);
       // console.log(orderNum, addOrder, link, linkTable, netTable);
     });
     const linkNet = echarts.init(this.$refs.linkNet);
@@ -88,7 +82,6 @@ export default {
     }, 1000);
     getNet().then((res) => {
       const netTable = res.data;
-      console.log(netTable);
 
       // 轨迹路线图
       let optionNet = {
@@ -104,11 +97,11 @@ export default {
           {
             type: "graph",
             layout: "force",
-            //roam: true, // 开启鼠标缩放和平移漫游功能
+            roam: true, // 开启鼠标缩放和平移漫游功能
             // 设置节点数据
             force: {
               // 调整节点之间的排斥力，从而调整密度
-              repulsion: 200, // 你可以根据需要调整这个值来改变密度
+              repulsion: 500, // 你可以根据需要调整这个值来改变密度
             },
             data: netTable.nodes.map(function (node) {
               return {
@@ -129,14 +122,31 @@ export default {
           },
         ],
       };
+      console.log(netTable);
       linkNet.setOption(optionNet);
+      linkNet.on("click", (params) => {
+        if (params.dataType == "node") {
+          this.link.linkid = params.data.name;
+        }
+      });
     });
+  },
+  watch: {
+    "link.linkid": function (val) {
+      if (val !== undefined) {
+        // 添加额外的检查
+        let jsonVal = { 'linkid': val };
+        postHome(jsonVal).then((data) => {
+          this.link = data.data.data.link;
+        });
+      }
+    },
   },
 };
 </script>
 
 <style lang="less">
 .linkNet {
-  height: 542px;
+  height: 580px;
 }
 </style>
