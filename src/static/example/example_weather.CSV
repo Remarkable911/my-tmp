@@ -1,5 +1,5 @@
-date,weather,hightemp,lowtemp,,,
-2020/8/1,rainstorm,28,26,,,
-2020/8/2,heavy rain,29,25,,,
-2020/8/3,moderate rain,30,26,,,
-2020/8/4,moderate rain,30,25,,,
+date,weather,hightemp,lowtemp
+2024/5/1,rainstorm,28,26
+2024/5/2,heavy rain,29,25
+2024/5/3,moderate rain,30,26
+2024/5/4,moderate rain,30,25

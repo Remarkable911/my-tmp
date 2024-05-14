@@ -47,44 +47,29 @@ export default {
     };
   },
   components: {},
-  methods: {},
   computed: {},
-  mounted() {
-    getHome().then((res) => {
-      // console.log(res);
-      const { linkFlow, orderNum, todayNum } = res.data.data;
+  methods: {
+    initCharts(HomeData, netTable) {
       const linkTraffic = echarts.init(this.$refs.linkTraffic);
-      // 车流量柱状图
-      let optionTraffic = {
+      linkTraffic.setOption({
         title: {
           text: "link路段车流量统计",
         },
+        tooltip: {},
         xAxis: {
-          data: linkFlow.map((item) => item.linkid),
+          data: HomeData.linkFlow.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           name: "车流量统计",
           type: "bar",
-          data: linkFlow.map((item) => item.link_count),
+          data: HomeData.linkFlow.map((item) => item.link_count),
         },
-      };
-      // console.log(optionTraffic);
-      linkTraffic.setOption(optionTraffic);
-      this.$set(this, "orderNum", orderNum); //将orderNum和addOrder放到data中，这样就可以直接在页面中使用
-      this.$set(this, "todayNum", todayNum);
-      // console.log(orderNum, addOrder, link, linkTable, netTable);
-    });
-    const linkNet = echarts.init(this.$refs.linkNet);
-    linkNet.showLoading();
-    setTimeout(() => {
-      linkNet.hideLoading();
-    }, 1000);
-    getNet().then((res) => {
-      const netTable = res.data;
-
-      // 轨迹路线图
-      let optionNet = {
+      });
+      this.$set(this, "orderNum", HomeData.orderNum);
+      this.$set(this, "todayNum", HomeData.todayNum);
+      const linkNet = echarts.init(this.$refs.linkNet);
+      linkNet.setOption({
         renderer: "canvas", // 设置渲染器为 WebGL
         // 设置图表标题
         title: {
@@ -121,21 +106,37 @@ export default {
             edges: netTable.edges,
           },
         ],
-      };
-      console.log(netTable);
-      linkNet.setOption(optionNet);
+      });
       linkNet.on("click", (params) => {
         if (params.dataType == "node") {
           this.link.linkid = params.data.name;
         }
       });
-    });
+    },
+  },
+  mounted() {
+    if (
+      !sessionStorage.getItem("homeData") ||
+      !sessionStorage.getItem("netTable")
+    ) {
+      Promise.all([getHome(), getNet()]).then(([homeRes, netRes]) => {
+        const HomeData = homeRes.data.data;
+        const netTable = netRes.data;
+        sessionStorage.setItem("homeData", JSON.stringify(HomeData));
+        sessionStorage.setItem("netTable", JSON.stringify(netTable));
+        this.initCharts(HomeData, netTable);
+      });
+    } else {
+      const HomeData = JSON.parse(sessionStorage.getItem("homeData"));
+      const netTable = JSON.parse(sessionStorage.getItem("netTable"));
+      this.initCharts(HomeData, netTable);
+    }
   },
   watch: {
     "link.linkid": function (val) {
       if (val !== undefined) {
         // 添加额外的检查
-        let jsonVal = { 'linkid': val };
+        let jsonVal = { linkid: val };
         postHome(jsonVal).then((data) => {
           this.link = data.data.data.link;
         });

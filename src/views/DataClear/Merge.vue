@@ -54,8 +54,9 @@
 </template>
 
 <script>
-import { getMerge, postMerge,postMergeQuery } from "@/api";
+import { getMerge, postMerge, postMergeQuery } from "@/api";
 import * as echarts from "echarts";
+import { formatTime } from "@/utils/formatTime";
 export default {
   data() {
     return {
@@ -103,10 +104,17 @@ export default {
       this.searchForm.formattedDate = `${year}-${month}-${day}`;
     },
     query() {
-      postMergeQuery(this.searchForm).then(res=>{
-        console.log(res)
-        this.tableData =res.data.data.order
-      })
+      if (this.searchForm.date || this.searchForm.driveid) {
+        postMergeQuery(this.searchForm).then((res) => {
+          console.log(res);
+          this.tableData = res.data.data.order;
+        });
+      } else {
+        this.$message.error("请选择日期或司机编号");
+        getMerge().then((res) => {
+          this.tableData = res.data.data.order;
+        });
+      }
     },
     mergeLink(row) {
       let orderid = row.orderid;

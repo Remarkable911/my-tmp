@@ -1,6 +1,5 @@
 <template>
   <div>
-    <el-button type="primary">更新数据</el-button>
     <div class="mt-4 mb-4">
       <h2>路段估值</h2>
       <el-form
@@ -25,7 +24,7 @@
       <span v-if="linkRes" :model="firstResult">
         查询结果：从{{ firstResult.startLink }}到达{{
           firstResult.endLink
-        }}的时间预计为{{ firstResult.linkTime }}分钟<br />
+        }}的时间预计为{{ firstResult.linkTime }}秒<br />
         {{ path }}
       </span>
       <span v-if="linkError"> 暂无历史数据 </span>
@@ -75,7 +74,7 @@
     <div>
       <span v-if="allRes" :model="secondResult">
         查询结果：从{{ secondResult.startLink }}到达{{ secondResult.endLink }}
-        的时间预计为{{ secondResult.average_ata }}分钟
+        的时间预计为{{ secondResult.average_ata }}秒
       </span>
       <span v-if="allError"> 暂无历史数据 </span>
     </div>

@@ -28,98 +28,109 @@ import { getStatistics } from "../api";
 import * as echarts from "echarts";
 export default {
   data() {
-    return {};
+    return {
+    };
   },
   mounted() {
-    getStatistics().then((res) => {
-      const {
-        crossTimeTable,
-        disOrderTable,
-        driverRunTable,
-        linkFlowTable,
-        linkTimeTable,
-      } = res.data.data;
+    // 检查sessionStorage中是否已经存在数据
+    if (!sessionStorage.getItem("statisticsData")) {
+      // 如果不存在，则获取数据并存储到sessionStorage中
+      getStatistics().then((res) => {
+        const statisticsData = res.data.data;
+        // 存储到sessionStorage中
+        sessionStorage.setItem("statisticsData", JSON.stringify(statisticsData));
+        // 数据加载完成后初始化图表
+        this.initCharts(statisticsData);
+      });
+    } else {
+      // 如果数据已存在于sessionStorage中，则直接初始化图表
+      const statisticsData = JSON.parse(sessionStorage.getItem("statisticsData"));
+      this.initCharts(statisticsData);
+    }
+  },
+  methods: {
+    initCharts(statisticsData) {
       const crossTime = echarts.init(this.$refs.crossTime);
       const linkTime = echarts.init(this.$refs.linkTime);
       const disOrder = echarts.init(this.$refs.disOrder);
       const linkFlow = echarts.init(this.$refs.linkFlow);
       const driverRun = echarts.init(this.$refs.driverRun);
-      let optionCrossTime = {
+
+      crossTime.setOption({
         title: {
           text: "cross通行时间",
         },
         tooltip: {},
         xAxis: {
-          data: crossTimeTable.desc.map((item) => item.crossid),
+          data: statisticsData.crossTimeTable.desc.map((item) => item.crossid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: crossTimeTable.desc.map((item) => item.crosstime),
+          data: statisticsData.crossTimeTable.desc.map((item) => item.crosstime),
         },
-      };
-      let optionLinkTime = {
+      });
+
+      linkTime.setOption({
         title: {
           text: "link通行时间",
         },
         tooltip: {},
         xAxis: {
-          data: linkTimeTable.desc.map((item) => item.linkid),
+          data: statisticsData.linkTimeTable.desc.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: linkTimeTable.desc.map((item) => item.linkavgtime),
+          data: statisticsData.linkTimeTable.desc.map((item) => item.linkavgtime),
         },
-      };
-      let optionDisOrder = {
+      });
+
+      disOrder.setOption({
         title: {
           text: "order距离",
         },
         tooltip: {},
         xAxis: {
-          data: disOrderTable.desc.map((item) => item.orderid),
+          data: statisticsData.disOrderTable.desc.map((item) => item.orderid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: disOrderTable.desc.map((item) => item.distance),
+          data: statisticsData.disOrderTable.desc.map((item) => item.distance),
         },
-      };
-      let optionLinkFlow = {
+      });
+
+      linkFlow.setOption({
         title: {
           text: "link车流量",
         },
         tooltip: {},
         xAxis: {
-          data: linkFlowTable.desc.map((item) => item.linkid),
+          data: statisticsData.linkFlowTable.desc.map((item) => item.linkid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: linkFlowTable.desc.map((item) => item.link_count),
+          data: statisticsData.linkFlowTable.desc.map((item) => item.link_count),
         },
-      };
-      let optionDriveRun = {
+      });
+
+      driverRun.setOption({
         title: {
           text: "司机跑单数量",
         },
         tooltip: {},
         xAxis: {
-          data: driverRunTable.desc.map((item) => item.driverid),
+          data: statisticsData.driverRunTable.desc.map((item) => item.driverid),
         },
         yAxis: {},
         series: {
           type: "bar",
-          data: driverRunTable.desc.map((item) => item.drive_count),
+          data: statisticsData.driverRunTable.desc.map((item) => item.drive_count),
         },
-      };
-      crossTime.setOption(optionCrossTime);
-      linkTime.setOption(optionLinkTime);
-      disOrder.setOption(optionDisOrder);
-      linkFlow.setOption(optionLinkFlow);
-      driverRun.setOption(optionDriveRun);
-    });
+      });
+    },
   },
 };
 </script>

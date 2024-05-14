@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col items-center h-screen bg-slate-200">
-    <h2 class="text-center mt-20">欢迎使用行程管理时间系统</h2>
+    <h2 class="text-center mt-20">欢迎使用行程时间管理系统</h2>
     <el-card class="mt-8">
       <el-form
         :inline="true"

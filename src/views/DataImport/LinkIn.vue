@@ -1,22 +1,23 @@
 <template>
   <div>
     <div class="grid">
-      <span class="">请参考样例格式上传文件</span>
-      <el-button type="primary">参考样例</el-button>
     </div>
     <el-upload
+      ref="upload"
+      action="#"
+      :before-upload="beforeUpload"
+      :http-request="uploadRequest"
+      :file-list="fileList"
       drag
-      action="https://jsonplaceholder.typicode.com/posts/"
-      multiple
     >
       <i class="el-icon-upload"></i>
       <div class="el-upload__text">将文件拖到此处，或<em>点击上传</em></div>
       <div class="el-upload__tip" slot="tip">只能上传csv文件</div>
     </el-upload>
-    <el-button type="primary">上传</el-button>
+    <el-button type="primary" @click="submitUpload">上传</el-button>
     <el-form :inline="true" ref="form" :model="form" label-width="80px">
-      <el-form-item label="订单编号">
-        <el-input v-model="form.orderId"></el-input>
+      <el-form-item label="路段编号">
+        <el-input v-model="form.linkId"></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -34,13 +35,14 @@
 </template>
 
 <script>
-import { getLinkQuery } from "@/api";
+import { getLinkQuery,postLinkQuery,postLinkImport } from "@/api";
 export default {
   data() {
     return {
       form: {
-        orderId: "",
+        linkId: "",
       },
+      fileList: [],
       tableLabel: {
         // 路口编号	路口通行时间
         // 驶入路口编号	驶出路口编号	订单编号
@@ -64,9 +66,40 @@ export default {
     };
   },
   methods:{
-    onsubmit(){
-
-    }
+    onSubmit() {
+      if(this.form.linkId){
+        postLinkQuery({ "linkId": this.form.linkId }).then((res) => {
+          this.tableData = res.data.data;
+        })
+      }
+      else{
+        this.$message.error("请输入路段编号");
+        getLinkQuery().then((res) => {
+          this.tableData = res.data.data;
+        });
+      }
+    },
+    beforeUpload(file) {
+      this.fileList.push(file);
+      return false; // 阻止自动上传
+    },
+    uploadRequest(option) {
+      const formData = new FormData();
+      formData.append("linkFile", option.file);
+      postLinkImport(formData)
+        .then((response) => {
+          console.log(response.data);
+          this.$message.success("上传成功")
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+    submitUpload() {
+      this.fileList.forEach((file) => {
+        this.uploadRequest({ file }); // 手动调用 uploadRequest 方法
+      });
+    },
   },
   mounted(){
     getLinkQuery().then(res=>{
