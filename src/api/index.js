@@ -159,3 +159,6 @@ export const postMergeQuery =(data)=>{
 export const getRecord = (params) => {
   return request.get('/record', { params: params });
 };
+export const postRecord =(data)=>{
+  return request.post('/record',data)
+}

@@ -1,7 +1,6 @@
 <template>
   <div>
-    <div class="grid">
-    </div>
+    <div class="grid"></div>
     <el-upload
       ref="upload"
       action="#"
@@ -17,7 +16,11 @@
     <el-button type="primary" @click="submitUpload">上传</el-button>
     <el-form :inline="true" ref="form" :model="form" label-width="80px">
       <el-form-item label="路段编号">
-        <el-input v-model="form.linkId"></el-input>
+        <el-input
+          @blur="$trimInput"
+          @input="$trimInput"
+          v-model="form.linkId"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -35,7 +38,7 @@
 </template>
 
 <script>
-import { getLinkQuery,postLinkQuery,postLinkImport } from "@/api";
+import { getLinkQuery, postLinkQuery, postLinkImport } from "@/api";
 export default {
   data() {
     return {
@@ -49,7 +52,7 @@ export default {
         orderid: "订单编号",
         linkid: "路段编号",
         linktime: "路段通行时间",
-        linkratio:"路段覆盖率",
+        linkratio: "路段覆盖率",
         linkcurrentstatus: "进入时状态",
         linkarrivalstatus: "驶出时状态",
       },
@@ -58,21 +61,20 @@ export default {
           orderid: "8734434",
           linkid: "2",
           linktime: "19.2",
-          linkratio:"100%",
+          linkratio: "100%",
           linkcurrentstatus: "1",
           linkarrivalstatus: "1",
         },
       ],
     };
   },
-  methods:{
+  methods: {
     onSubmit() {
-      if(this.form.linkId){
-        postLinkQuery({ "linkId": this.form.linkId }).then((res) => {
+      if (this.form.linkId) {
+        postLinkQuery({ linkId: this.form.linkId }).then((res) => {
           this.tableData = res.data.data;
-        })
-      }
-      else{
+        });
+      } else {
         this.$message.error("请输入路段编号");
         getLinkQuery().then((res) => {
           this.tableData = res.data.data;
@@ -89,7 +91,7 @@ export default {
       postLinkImport(formData)
         .then((response) => {
           console.log(response.data);
-          this.$message.success("上传成功")
+          this.$message.success("上传成功");
         })
         .catch((error) => {
           console.error(error);
@@ -101,11 +103,11 @@ export default {
       });
     },
   },
-  mounted(){
-    getLinkQuery().then(res=>{
-      this.tableData =res.data.data
-    })
-  }
+  mounted() {
+    getLinkQuery().then((res) => {
+      this.tableData = res.data.data;
+    });
+  },
 };
 </script>
 

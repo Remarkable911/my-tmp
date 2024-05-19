@@ -11,7 +11,11 @@
         ></el-date-picker>
       </el-form-item>
       <el-form-item label="司机编号：" prop="driveid">
-        <el-input v-model="searchForm.driveid"></el-input>
+        <el-input
+          @blur="$trimInput"
+          @input="$trimInput"
+          v-model="searchForm.driveid"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="query">查询</el-button>

@@ -1,24 +1,31 @@
 <template>
   <div>
     <div class="row mb-4">
-      <el-card class="col">
-        <div ref="crossTime" class="h-56 bg-slate-300"></div>
+      <el-card body-style="padding:0px "  class="col">
+        <div ref="linkTime" class="net bg-slate-300"></div>
       </el-card>
-      <el-card class="col">
-        <div ref="linkTime" class="h-56 bg-slate-300"></div>
+      <el-card body-style="padding:0px" class="col">
+        <div ref="crossTime" class="net bg-slate-300"></div>
       </el-card>
-      <el-card class="col">
-        <div ref="disOrder" class="h-56 bg-slate-300"></div>
+      </div>
+      <div class="row mb-4">
+      <el-card body-style="padding:0px" class="col">
+        <div ref="disOrder" class="net bg-slate-300"></div>
       </el-card>
-    </div>
-    <div class="row">
-      <el-card class="col">
-        <div ref="linkFlow" class="h-56 bg-slate-300"></div>
+    
+    
+      <el-card body-style="padding:0px" class="col">
+        <div ref="linkFlow" class="net bg-slate-300"></div>
       </el-card>
-      <el-card class="col">
-        <div ref="driverRun" class="h-56 bg-slate-300"></div>
+      </div>
+      <div class="row mb-4">
+      <el-card body-style="padding:0px" class="col">
+        <div ref="driverRun" class="net bg-slate-300"></div>
       </el-card>
       <el-card class="col"></el-card>
+    </div>
+    <div class="row mb-4">
+
     </div>
   </div>
 </template>
@@ -118,7 +125,7 @@ export default {
 
       driverRun.setOption({
         title: {
-          text: "司机跑单数量",
+          text: "司机上传记录数量",
         },
         tooltip: {},
         xAxis: {
@@ -135,5 +142,9 @@ export default {
 };
 </script>
 
-<style lang="less">
+<style lang="less" scoped>
+.net {
+  width: 100%;
+  height: 300px;
+}
 </style>

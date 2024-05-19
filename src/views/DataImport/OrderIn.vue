@@ -1,6 +1,9 @@
 <template>
   <div>
-    <div class="grid"></div>
+    <div class="grid">
+      <span class="">请参考样例格式上传文件</span>
+      <el-button type="primary" @click="download">参考样例</el-button>
+    </div>
     <el-upload
       ref="upload"
       action="#"
@@ -72,6 +75,9 @@ export default {
     };
   },
   methods: {
+    download(){
+      this.$message.success("下载成功")
+    },
     onSubmit() {
       if (this.form.date) {
         postOrderQuery({ "formatDate": this.formatDate }).then((res) => {

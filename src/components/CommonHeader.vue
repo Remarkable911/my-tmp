@@ -52,8 +52,16 @@ export default {
   computed: {
     ...mapState({
       tag: (state) => state.tab.tabList,
-      username: (state) => state.tab.username,
+      usernameRaw: (state) => state.user.driverId,
     }),
+    username(){
+      if(this.usernameRaw === 1){
+        return "系统管理员"
+      }else if (this.usernameRaw === 2) {
+      return "数据分析员";
+    }
+    return this.usernameRaw;
+    }
   },
   mounted() {
     

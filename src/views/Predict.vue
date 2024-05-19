@@ -9,10 +9,18 @@
         :rules="linkRule"
       >
         <el-form-item label="路段起点" prop="startLink">
-          <el-input v-model="linkForm.startLink"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="linkForm.startLink"
+          ></el-input>
         </el-form-item>
         <el-form-item label="路段终点" prop="endLink">
-          <el-input v-model="linkForm.endLink"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="linkForm.endLink"
+          ></el-input>
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="linkQuery">查询</el-button>
@@ -34,10 +42,18 @@
       <h2>总体估值</h2>
       <el-form :inline="true" :model="allForm" ref="allForm" :rules="allRule">
         <el-form-item label="路段起点" prop="startLink">
-          <el-input v-model="allForm.startLink"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="allForm.startLink"
+          ></el-input>
         </el-form-item>
         <el-form-item label="路段终点" prop="endLink">
-          <el-input v-model="allForm.endLink"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="allForm.endLink"
+          ></el-input>
         </el-form-item>
         <el-form-item label="出行时间" prop="time">
           <el-time-select
@@ -52,10 +68,7 @@
           </el-time-select>
         </el-form-item>
         <el-form-item label="时间片" prop="slice">
-          <el-select
-            v-model="allForm.slice"
-            placeholder="请选择"
-          >
+          <el-select v-model="allForm.slice" placeholder="请选择">
             <el-option
               v-for="item in timeSlice"
               :key="item.value"
@@ -73,7 +86,9 @@
     </div>
     <div>
       <span v-if="allRes" :model="secondResult">
-        查询结果：从{{ secondResult.startLink }}到达{{ secondResult.endLink }}
+        查询结果：从{{ secondResult.startLink }}到达{{
+          secondResult.endLink
+        }}
         的时间预计为{{ secondResult.average_ata }}秒
       </span>
       <span v-if="allError"> 暂无历史数据 </span>
@@ -87,10 +102,11 @@ export default {
   data() {
     return {
       methods: 0,
-      step:"00:15",
+      step: "00:15",
       linkForm: {
         startLink: "",
         endLink: "",
+        driverid:""
       },
       linkRule: {
         startLink: [
@@ -121,6 +137,7 @@ export default {
         endLink: "",
         time: "08:00",
         slice: "",
+        driverid:""
       },
       allRule: {
         startLink: [
@@ -185,6 +202,7 @@ export default {
     linkQuery() {
       this.$refs.linkForm.validate((valid) => {
         if (valid) {
+          this.linkForm.driverid = this.driverId
           postPredict1(this.linkForm).then((res) => {
             this.firstResult = res.data.data;
             if (this.firstResult.linkTime === "Infinity") {
@@ -201,6 +219,7 @@ export default {
     allQuery() {
       this.$refs.allForm.validate((valid) => {
         if (valid) {
+          this.allForm.driverid = this.driverId
           postPredict2(this.allForm).then((res) => {
             this.secondResult = res.data.data;
             console.log(res.data);
@@ -218,9 +237,11 @@ export default {
     },
   },
   computed: {
-    
     path() {
       return "路线为：" + this.firstResult.path.join("->");
+    },
+    driverId() {
+      return this.$store.state.user.driverId;
     },
   },
 };

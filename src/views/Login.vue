@@ -13,6 +13,8 @@
         <el-form-item label="用户名:" prop="username">
           <el-input
             v-model="loginForm.username"
+            @blur="$trimInput"
+            @input="$trimInput"
             placeholder="请输入用户名"
           ></el-input>
         </el-form-item>
@@ -20,6 +22,8 @@
           <el-input
             type="password"
             v-model="loginForm.password"
+            @blur="$trimInput"
+            @input="$trimInput"
             placeholder="请输入密码"
             @keyup.enter.native="login"
           ></el-input>
@@ -34,7 +38,7 @@
 
 <script>
 import { postLogin } from "../api";
-import Cookie from 'js-cookie';
+import Cookie from "js-cookie";
 export default {
   data() {
     return {
@@ -55,36 +59,31 @@ export default {
     login() {
       this.$refs.loginForm.validate((valid) => {
         if (valid) {
-          postLogin(this.loginForm).then(({data})=>{
-            // console.log(data)
-            if(data.code === 404){
-              this.$message.error("登录失败")
-            }
-            else if(data.data.status === 2){
-              this.$message.error("该用户已被禁用")
-            }
-            else{
-              Cookie.set('token', data.data.token)
-              this.$store.commit('setMenu',data.data.menu)
-              this.$store.commit('addMenu', this.$router)
-              this.$store.commit('setUser', data.data.username)
-              if (data.data.rule === 1){
-                this.$router.push('/home')
-              }
-              else if (data.data.rule === 2){
-                this.$router.push('/statistics')
-              }
-              else{
-                this.$router.push('/user')
+          postLogin(this.loginForm).then(({ data }) => {
+            if (data.code === 404) {
+              this.$message.error("登录失败");
+            } else if (data.data.status === 2) {
+              this.$message.error("该用户已被禁用");
+            } else {
+              Cookie.set("token", data.data.token);
+              this.$store.commit("setMenu", data.data.menu);
+              this.$store.commit("addMenu", this.$router);
+              this.$store.commit("setUser", data.data.username);
+              this.$store.commit("setDriverId",data.data.id)
+              if (data.data.rule === 1) {
+                this.$router.push("/home");
+              } else if (data.data.rule === 2) {
+                this.$router.push("/statistics");
+              } else {
+                this.$router.push("/user");
               }
             }
-          })
+          });
         }
       });
     },
   },
-  mounted() {
-  }
+  mounted() {},
 };
 </script>
 

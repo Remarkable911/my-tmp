@@ -1,8 +1,6 @@
 <template>
   <div>
-    <div class="grid">
-
-    </div>
+    <div class="grid"></div>
     <el-upload
       ref="upload"
       action="#"
@@ -18,7 +16,11 @@
     <el-button type="primary" @click="submitUpload">上传</el-button>
     <el-form :inline="true" ref="form" :model="form" label-width="80px">
       <el-form-item label="路口编号">
-        <el-input v-model="form.crossId"></el-input>
+        <el-input
+          @blur="$trimInput"
+          @input="$trimInput"
+          v-model="form.crossId"
+        ></el-input>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="onSubmit">查询</el-button>
@@ -36,7 +38,7 @@
 </template>
 
 <script>
-import { getCrossQuery,postCrossQuery,postCrossImport } from "@/api"
+import { getCrossQuery, postCrossQuery, postCrossImport } from "@/api";
 export default {
   data() {
     return {
@@ -64,14 +66,13 @@ export default {
       ],
     };
   },
-  methods:{
+  methods: {
     onSubmit() {
-      if(this.form.crossId){
-        postCrossQuery({"crossId":this.form.crossId}).then(res=>{
+      if (this.form.crossId) {
+        postCrossQuery({ crossId: this.form.crossId }).then((res) => {
           this.tableData = res.data.data;
-        })
-      }
-      else{
+        });
+      } else {
         this.$message.error("请输入");
         getCrossQuery().then((res) => {
           this.tableData = res.data.data;
@@ -88,7 +89,7 @@ export default {
       postCrossImport(formData)
         .then((response) => {
           console.log(response.data);
-          this.$message.success("上传成功")
+          this.$message.success("上传成功");
         })
         .catch((error) => {
           console.error(error);
@@ -100,11 +101,11 @@ export default {
       });
     },
   },
-  mounted(){
-    getCrossQuery().then(res=>{
+  mounted() {
+    getCrossQuery().then((res) => {
       this.tableData = res.data.data;
-    })
-  }
+    });
+  },
 };
 </script>
 

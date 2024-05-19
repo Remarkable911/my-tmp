@@ -4,19 +4,19 @@
       <el-col :span="6" class="ml-1 mr-7">
         <el-card class="box-card mb-4">
           <div class="mb-2">
-            <span>收录订单总数：{{ orderNum }}</span>
+            <span>上传行程总数：{{ orderNum }}</span>
           </div>
           <div>
-            <span>今日新增订单：{{ todayNum }}</span>
+            <span>今日上传行程数：{{ todayNum }}</span>
           </div>
         </el-card>
         <el-card class="box-card mb-4">
           <div>
             <span>link信息：</span>
             <div>
-              <h6>id:{{ link.linkid }}</h6>
-              <h6>平均用时:{{ link.linkavgtime }}</h6>
-              <h6>通行状态:{{ link.avgstatus }}</h6>
+              <h6>id:{{ linkPro.linkid }}</h6>
+              <h6>平均用时:{{ linkPro.linkavgtime }}</h6>
+              <h6>通行状态:{{ linkPro.avgstatus }}</h6>
             </div>
           </div>
         </el-card>
@@ -46,8 +46,11 @@ export default {
       link: { linkid: "2", linkavgtime: "19.3436", avgstatus: "1" },
     };
   },
-  components: {},
-  computed: {},
+  computed: {
+    driverId() {
+      return this.$store.state.user.driverId;
+    },
+  },
   methods: {
     initCharts(HomeData, netTable) {
       const linkTraffic = echarts.init(this.$refs.linkTraffic);
@@ -119,18 +122,44 @@ export default {
       !sessionStorage.getItem("homeData") ||
       !sessionStorage.getItem("netTable")
     ) {
-      Promise.all([getHome(), getNet()]).then(([homeRes, netRes]) => {
-        const HomeData = homeRes.data.data;
-        const netTable = netRes.data;
-        sessionStorage.setItem("homeData", JSON.stringify(HomeData));
-        sessionStorage.setItem("netTable", JSON.stringify(netTable));
-        this.initCharts(HomeData, netTable);
-      });
+      Promise.all([getHome({ driverId: this.driverId }), getNet()]).then(
+        ([homeRes, netRes]) => {
+          console.log(this.driverId);
+          const HomeData = homeRes.data.data;
+          const netTable = netRes.data;
+          sessionStorage.setItem("homeData", JSON.stringify(HomeData));
+          sessionStorage.setItem("netTable", JSON.stringify(netTable));
+          this.initCharts(HomeData, netTable);
+        }
+      );
     } else {
       const HomeData = JSON.parse(sessionStorage.getItem("homeData"));
       const netTable = JSON.parse(sessionStorage.getItem("netTable"));
       this.initCharts(HomeData, netTable);
     }
+  },
+  computed: {
+    linkPro() {
+      let status;
+      switch (this.link.avgstatus) {
+        case 1:
+          status = "畅通";
+          break;
+        case 2:
+          status = "缓行";
+          break;
+        case 3:
+          status = "拥堵";
+          break;
+        default:
+          status = "未知";
+      }
+
+      return {
+        ...this.link,
+        avgstatus: status,
+      };
+    },
   },
   watch: {
     "link.linkid": function (val) {

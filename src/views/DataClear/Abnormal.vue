@@ -24,12 +24,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -52,12 +47,6 @@
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
               <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
-              <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
                 size="mini"
@@ -79,12 +68,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -107,12 +91,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -136,12 +115,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -156,7 +130,7 @@
     <div v-else-if="fileType === 'link'">
       <div v-if="linkTable.linktime.info">
         <span>{{ linkTable.linktime.info }}异常数据展示（前20条）：</span>
-        <el-table :data="linkTable.linktime.table">
+        <el-table :data="linkTimeTable">
           <el-table-column
             v-for="(val, key) in linkTableLabel"
             :key="key"
@@ -165,12 +139,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -183,7 +152,7 @@
       </div>
       <div v-if="linkTable.ratio.info">
         <span>{{ linkTable.ratio.info }}异常数据展示（前20条）：</span>
-        <el-table :data="linkTable.ratio.table">
+        <el-table :data="linkRatioTable">
           <el-table-column
             v-for="(val, key) in linkTableLabel"
             :key="key"
@@ -192,12 +161,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -210,7 +174,7 @@
       </div>
       <div v-if="linkTable.status.info">
         <span>{{ linkTable.status.info }}异常数据展示（前20条）：</span>
-        <el-table :data="linkTable.status.table">
+        <el-table :data="linkStatusTable">
           <el-table-column
             v-for="(val, key) in linkTableLabel"
             :key="key"
@@ -219,12 +183,7 @@
           />
           <el-table-column label="操作" width="150">
             <template slot-scope="scope">
-              <el-button
-                type="primary"
-                @click="editClick(scope.row)"
-                size="mini"
-                >编辑</el-button
-              >
+              
               <el-button
                 type="danger"
                 @click="deleteClick(scope.row)"
@@ -269,15 +228,6 @@ export default {
           label: "link路段",
         },
       ],
-      editForm: {
-        username: "",
-        id: "",
-        gender: "",
-        phone: "",
-        email: "",
-        rule: "",
-        status: "",
-      },
       fileType: "",
       linkTableLabel: {
         orderid: "订单编号",
@@ -285,6 +235,7 @@ export default {
         linkratio: "路段覆盖率",
         linkcurrentstatus: "进入时状态",
         linkarrivalstatus: "驶出时状态",
+        type: "类型",
       },
       orderTableLabel: {
         orderid: "订单编号",
@@ -358,16 +309,8 @@ export default {
       });
     },
     deleteClick(row) {
-      let type;
-      if (row.hasOwnProperty("ata")) {
-        type = 1;
-      } else if (row.hasOwnProperty("linktime")) {
-        type = 2;
-      } else if (row.hasOwnProperty("crosstime")) {
-        type = 3;
-      }
-      let row_json =JSON.stringify(row)
-      if (type === 1) {
+      let row_json = JSON.stringify(row);
+      if (this.fileType === "order") {
         deleteOrder(row_json).then((res) => {
           if (res.data.code === 404) {
             this.$message.error("删除失败");
@@ -376,29 +319,26 @@ export default {
             this.getOrder();
           }
         });
-      }
-      else if(type === 2){
-        deleteLink(row_json).then(res=>{
+      } else if (this.fileType === "link") {
+        deleteLink(row_json).then((res) => {
           if (res.data.code === 404) {
             this.$message.error("删除失败");
           } else {
             this.$message.success("删除成功");
             this.getLink();
           }
-        })
-      }
-      else if( type === 3 ){
-        deleteCross(row_json).then(res=>{
+        });
+      } else if (this.fileType === "cross") {
+        deleteCross(row_json).then((res) => {
           if (res.data.code === 404) {
             this.$message.error("删除失败");
           } else {
             this.$message.success("删除成功");
             this.getCross();
           }
-        })
+        });
       }
     },
-    editClick(row) {},
   },
   watch: {
     fileType(val) {
@@ -417,7 +357,8 @@ export default {
         return {
           ...item,
           date: formatTime(item.date),
-          type: item.ata === null ? "数据为空" : "数据不合法",
+          type:
+            item.ata === null ? "真实行程总时间为空" : "真实行程总时间不合法",
         };
       });
     },
@@ -426,7 +367,7 @@ export default {
         return {
           ...item,
           date: formatTime(item.date),
-          type: item.distance === null ? "数据为空" : "数据不合法",
+          type: item.distance === null ? "路线距离为空" : "路线距离不合法",
         };
       });
     },
@@ -435,7 +376,7 @@ export default {
         return {
           ...item,
           date: formatTime(item.date),
-          type: item.date === null ? "数据为空" : "数据不合法",
+          type: item.date === null ? "日期为空" : "日期不合法",
         };
       });
     },
@@ -444,7 +385,10 @@ export default {
         return {
           ...item,
           date: formatTime(item.date),
-          type: item.simpleeta === null ? "数据为空" : "数据不合法",
+          type:
+            item.simpleeta === null
+              ? "平均通行总时间为空"
+              : "平均通行总时间不合法",
         };
       });
     },
@@ -452,7 +396,33 @@ export default {
       return this.crossTable.table.map((item) => {
         return {
           ...item,
-          type: item.crosstime === null ? "数据为空" : "数据不合法",
+          type:
+            item.crosstime === null ? "路口通行时间为空" : "路口通行时间不合法",
+        };
+      });
+    },
+    linkTimeTable() {
+      return this.linkTable.linktime.table.map((item) => {
+        return {
+          ...item,
+          type:
+            item.linktime === null ? "路段通行时间为空" : "路段通行时间不合法",
+        };
+      });
+    },
+    linkStatusTable() {
+      return this.linkTable.status.table.map((item) => {
+        return {
+          ...item,
+          type: "路段状态不合法",
+        };
+      });
+    },
+    linkRatioTable() {
+      return this.linkTable.ratio.table.map((item) => {
+        return {
+          ...item,
+          type: "路段覆盖率不合法",
         };
       });
     },

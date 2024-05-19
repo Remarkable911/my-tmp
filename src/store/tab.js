@@ -4,7 +4,6 @@ export default {
         isCollapse: false, //用于控制菜单的展开与收起
         tabList: [], //面包屑
         menu: [], //菜单
-        username: '',
     },
     mutations: {
         // 修改菜单展开收起的方法

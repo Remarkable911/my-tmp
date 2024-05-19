@@ -16,13 +16,22 @@
         >
           <el-row>
             <el-form-item label="账号：" prop="id">
-              <el-input v-model="editForm.id" :disabled="true"></el-input>
+              <el-input
+                @blur="$trimInput"
+                @input="$trimInput"
+                v-model="editForm.id"
+                :disabled="true"
+              ></el-input>
             </el-form-item>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-form-item label="用户名：" prop="username" class="col">
-                <el-input v-model="editForm.username"></el-input>
+                <el-input
+                  @blur="$trimInput"
+                  @input="$trimInput"
+                  v-model="editForm.username"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
@@ -37,12 +46,20 @@
           <el-row>
             <el-col :span="12">
               <el-form-item label="手机号：" prop="phone">
-                <el-input v-model="editForm.phone"></el-input>
+                <el-input
+                  @blur="$trimInput"
+                  @input="$trimInput"
+                  v-model="editForm.phone"
+                ></el-input>
               </el-form-item>
             </el-col>
             <el-col :span="12">
               <el-form-item label="邮箱：" prop="email">
-                <el-input v-model="editForm.email"></el-input>
+                <el-input
+                  @blur="$trimInput"
+                  @input="$trimInput"
+                  v-model="editForm.email"
+                ></el-input>
               </el-form-item>
             </el-col>
           </el-row>
@@ -76,10 +93,18 @@
     <el-form ref="form" :model="form" :rules="userRule" label-width="80px">
       <div class="row">
         <el-form-item label="用户名：" prop="username" class="col mb-2">
-          <el-input v-model="form.username"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="form.username"
+          ></el-input>
         </el-form-item>
         <el-form-item label="账号：" prop="id" class="col mb-2">
-          <el-input v-model="form.id"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="form.id"
+          ></el-input>
         </el-form-item>
         <el-form-item label="性别：" prop="gender" class="col mb-2">
           <el-radio-group v-model="form.gender">
@@ -88,12 +113,20 @@
           </el-radio-group>
         </el-form-item>
         <el-form-item label="手机号：" prop="phone" class="col mb-2">
-          <el-input v-model="form.phone"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="form.phone"
+          ></el-input>
         </el-form-item>
       </div>
       <div class="row mt-4">
         <el-form-item label="邮箱：" prop="email" class="col mb-2">
-          <el-input v-model="form.email"></el-input>
+          <el-input
+            @blur="$trimInput"
+            @input="$trimInput"
+            v-model="form.email"
+          ></el-input>
         </el-form-item>
         <el-form-item label="角色：" prop="rule" class="col mb-2">
           <el-select v-model="form.rule" placeholder="请选择">
@@ -235,8 +268,8 @@ export default {
       this.editForm = JSON.parse(JSON.stringify(row));
     },
     deleteClick(row) {
-      let id ={'id':row.id}
-      id = JSON.stringify(id)
+      let id = { id: row.id };
+      id = JSON.stringify(id);
       deleteUser(id).then((data) => {
         if (data.code === 404) {
           this.$message.error("删除失败");

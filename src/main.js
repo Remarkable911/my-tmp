@@ -15,6 +15,26 @@ Vue.use(Element);
 // 将echarts注册为全局组件
 Vue.prototype.$echarts = echarts;
 Vue.prototype.$axios = axios;
+Vue.prototype.$trimInput = function (event) {
+    // 确保 event.target 存在并且是一个 DOM 元素
+    if (!event.target ) {
+      return;
+    }
+  // 获取输入框的值并去除首尾空格
+  const value = event.target.value.trim();
+  // 查找与输入框绑定的 Vue 实例
+  const vm = this;
+  const model = event.target.getAttribute("v-model");
+
+  // 通过 v-model 更新 Vue 实例中的数据
+  if (model && vm.hasOwnProperty(model)) {
+    vm[model] = value;
+  }
+
+  // 手动触发 input 事件，以确保 v-model 同步
+  event.target.value = value;
+  event.target.dispatchEvent(new Event("input"));
+};
 
 new Vue({
   router,
