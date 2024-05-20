@@ -73,7 +73,7 @@ export default {
               if (data.data.rule === 1) {
                 this.$router.push("/home");
               } else if (data.data.rule === 2) {
-                this.$router.push("/statistics");
+                this.$router.push("/overView");
               } else {
                 this.$router.push("/user");
               }

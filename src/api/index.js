@@ -39,6 +39,16 @@ export const deleteUser = (data) => {
 export const getStatistics = (params) =>{
   return request.get('/statistics', { params: params })
 }
+export const postFlow = (data) =>{
+  return request.post('/flow', data)
+}
+export const getLinkStatus = (params) =>{
+  return request.get('/status', { params: params })
+}
+export const getItinerary = (params) =>{
+  return request.get('/itinerary', { params: params })
+}
+
 // 预测
 export const postPredict1 =(data)=>{
   return request.post('/forecast/1',data)
