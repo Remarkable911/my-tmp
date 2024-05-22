@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid"></div>
+    <Download fileName="example_link.csv"/>
     <el-upload
       ref="upload"
       action="#"
@@ -39,7 +39,11 @@
 
 <script>
 import { getLinkQuery, postLinkQuery, postLinkImport } from "@/api";
+import Download from "@/components/Download";
 export default {
+  components:{
+    Download
+  },
   data() {
     return {
       form: {

@@ -15,11 +15,11 @@
           label-width="80px"
         >
           <el-row>
-            <el-form-item label="账号：" prop="id">
+            <el-form-item label="账号：" prop="driverid">
               <el-input
                 @blur="$trimInput"
                 @input="$trimInput"
-                v-model="editForm.id"
+                v-model="editForm.driverid"
                 :disabled="true"
               ></el-input>
             </el-form-item>
@@ -99,11 +99,11 @@
             v-model="form.username"
           ></el-input>
         </el-form-item>
-        <el-form-item label="账号：" prop="id" class="col mb-2">
+        <el-form-item label="账号：" prop="driverid" class="col mb-2">
           <el-input
             @blur="$trimInput"
             @input="$trimInput"
-            v-model="form.id"
+            v-model="form.driverid"
           ></el-input>
         </el-form-item>
         <el-form-item label="性别：" prop="gender" class="col mb-2">
@@ -179,7 +179,7 @@ export default {
     return {
       form: {
         username: "",
-        id: "",
+        driverid: "",
         gender: "",
         phone: "",
         email: "",
@@ -188,7 +188,7 @@ export default {
       },
       editForm: {
         username: "",
-        id: "",
+        driverid: "",
         gender: "",
         phone: "",
         email: "",
@@ -197,7 +197,7 @@ export default {
       },
       tableLabel: {
         username: "用户名",
-        id: "账号",
+        driverid: "账号",
         gender: "性别",
         phone: "手机号",
         email: "邮箱",
@@ -209,7 +209,7 @@ export default {
         username: [
           { required: true, message: "请输入用户名", trigger: "blur" },
         ],
-        id: [{ required: true, message: "请输入账号", trigger: "blur" }],
+        driverid: [{ required: true, message: "请输入账号", trigger: "blur" }],
         gender: [{ required: true, message: "请选择性别", trigger: "blur" }],
         phone: [{ required: true, message: "请输入手机号", trigger: "blur" }],
         email: [{ required: true, message: "请输入邮箱", trigger: "blur" }],
@@ -230,9 +230,10 @@ export default {
         if (valid) {
           postUser(this.form).then(({ data }) => {
             if (data.code === 404) {
-              this.$message.error("添加失败");
+              this.$message.error("添加失败,账号重复");
             } else {
               this.$message.success("添加成功");
+              this.$refs.form.resetFields();
               getUser().then((res) => {
                 this.userTable = res.data.data.userTable;
               });
@@ -268,9 +269,9 @@ export default {
       this.editForm = JSON.parse(JSON.stringify(row));
     },
     deleteClick(row) {
-      let id = { id: row.id };
-      id = JSON.stringify(id);
-      deleteUser(id).then((data) => {
+      let driverid = { driverid: row.driverid };
+      driverid = JSON.stringify(driverid);
+      deleteUser(driverid).then((data) => {
         if (data.code === 404) {
           this.$message.error("删除失败");
         } else {

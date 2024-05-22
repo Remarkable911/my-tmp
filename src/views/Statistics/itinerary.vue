@@ -9,17 +9,17 @@
 <script>
 import { getItinerary } from "../../api";
 import * as echarts from "echarts";
+
 export default {
   data() {
-    return {};
-  },
-  computed: {
-    itineraryData() {
-      return JSON.parse(sessionStorage.getItem("itineraryData"));
-    },
+    return {
+      itineraryData: null, // 在 data 中定义 itineraryData
+    };
   },
   methods: {
-    initCharts(data) {
+    initCharts() {
+      if (!this.itineraryData) return; // 确保在数据存在时才初始化图表
+
       const itineraryNum = echarts.init(this.$refs.itineraryNum);
       const itineraryInfo = echarts.init(this.$refs.itineraryInfo);
 
@@ -61,6 +61,7 @@ export default {
           },
         ],
       });
+
       itineraryInfo.setOption({
         title: {
           text: "全天时间段行程平均时间与平均距离",
@@ -85,7 +86,6 @@ export default {
             alignTicks: true,
             axisLine: {
               show: true,
-              
             },
             axisLabel: {
               formatter: "{value} s",
@@ -98,7 +98,6 @@ export default {
             alignTicks: true,
             axisLine: {
               show: true,
-              
             },
             axisLabel: {
               formatter: "{value} m",
@@ -111,7 +110,6 @@ export default {
           axisTick: {
             alignWithLabel: true,
           },
-          
           data: this.itineraryData.map((item) => item.sliceTime),
         },
         series: [
@@ -136,9 +134,13 @@ export default {
       getItinerary().then((res) => {
         const itineraryData = res.data.data;
         sessionStorage.setItem("itineraryData", JSON.stringify(itineraryData));
+        this.itineraryData = itineraryData; // 在数据加载完成后设置 itineraryData
+        this.initCharts(); // 在数据加载完成后初始化图表
       });
+    } else {
+      this.itineraryData = JSON.parse(sessionStorage.getItem("itineraryData"));
+      this.initCharts(); // 在数据已经存在时直接初始化图表
     }
-    this.initCharts(this.itineraryData);
   },
 };
 </script>

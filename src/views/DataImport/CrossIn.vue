@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid"></div>
+    <Download fileName="example_cross.csv"/>
     <el-upload
       ref="upload"
       action="#"
@@ -39,7 +39,11 @@
 
 <script>
 import { getCrossQuery, postCrossQuery, postCrossImport } from "@/api";
+import Download from "@/components/Download";
 export default {
+  components:{
+    Download
+  },
   data() {
     return {
       form: {
@@ -89,7 +93,7 @@ export default {
       postCrossImport(formData)
         .then((response) => {
           console.log(response.data);
-          this.$message.success("上传成功");
+          this.$message.success(response.data.msg);
         })
         .catch((error) => {
           console.error(error);

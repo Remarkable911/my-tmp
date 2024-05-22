@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="grid"></div>
+    <Download fileName="example_weather.csv"/>
     <el-upload
       ref="upload"
       action="#"
@@ -41,7 +41,11 @@
 <script>
 import { getWeatherQuery, postWeatherQuery, postWeatherImport } from "@/api";
 import { formatTime } from "@/utils/formatTime";
+import Download from "@/components/Download";
 export default {
+  components:{
+    Download
+  },
   data() {
     return {
       form: {
@@ -90,7 +94,7 @@ export default {
       postWeatherImport(formData)
         .then((response) => {
           console.log(response.data);
-          this.$message.success("上传成功");
+          this.$message.success(response.data.msg);
         })
         .catch((error) => {
           console.error(error);

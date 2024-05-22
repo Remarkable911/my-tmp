@@ -3,7 +3,7 @@ import nProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 const request=axios.create({
     baseURL: 'http://127.0.0.1:5000',
-    timeout: 100000,
+    timeout: 0,
 })
 // 添加请求拦截器
 request.interceptors.request.use(config => {

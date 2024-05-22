@@ -61,21 +61,49 @@ export default {
         if (valid) {
           postLogin(this.loginForm).then(({ data }) => {
             if (data.code === 404) {
-              this.$message.error("登录失败");
+              this.$message.error("用户名或密码错误");
             } else if (data.data.status === 2) {
-              this.$message.error("该用户已被禁用");
+              this.$message.error("您的账户已被禁用，请联系管理员");
             } else {
               Cookie.set("token", data.data.token);
               this.$store.commit("setMenu", data.data.menu);
               this.$store.commit("addMenu", this.$router);
               this.$store.commit("setUser", data.data.username);
-              this.$store.commit("setDriverId",data.data.id)
+              this.$store.commit("setDriverId", data.data.id);
               if (data.data.rule === 1) {
                 this.$router.push("/home");
+                this.$store.commit("setActiveMenu", "home");
+
+                let tab = {
+                  icon: "s-home",
+                  label: "首页",
+                  name: "home",
+                  path: "/home",
+                  url: "Home.vue",
+                };
+                this.$store.commit("selectTab", tab);
               } else if (data.data.rule === 2) {
                 this.$router.push("/overView");
+                this.$store.commit("setActiveMenu", "overView");
+                let tab = {
+                  icon: "news",
+                  label: "统计总览",
+                  name: "overView",
+                  path: "/overView",
+                  url: "Statistics/overView.vue",
+                };
+                this.$store.commit("selectTab", "统计总览");
               } else {
                 this.$router.push("/user");
+                this.$store.commit("setActiveMenu", "user");
+                let tab = {
+                  icon: "user-solid",
+                  label: "用户管理",
+                  name: "user",
+                  path: "/user",
+                  url: "User.vue",
+                };
+                this.$store.commit("selectTab", tab);
               }
             }
           });
@@ -83,7 +111,6 @@ export default {
       });
     },
   },
-  mounted() {},
 };
 </script>
 

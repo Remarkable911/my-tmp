@@ -101,6 +101,7 @@ import { postPredict1, postPredict2 } from "../api";
 export default {
   data() {
     return {
+      
       methods: 0,
       step: "00:15",
       linkForm: {

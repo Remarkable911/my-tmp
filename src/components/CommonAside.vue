@@ -1,15 +1,14 @@
 <template>
   <el-menu
-    default-active="1-4-1"
+    :default-active="activeMenu"
     class="el-menu-vertical-demo"
     @open="handleOpen"
     @close="handleClose"
-    :collapse="isCollapse"
     background-color="#28495A"
     text-color="#fff"
     active-text-color="#ffd04b"
   >
-    <h3>{{ isCollapse ? '行程管理' : '行程时间管理系统' }}</h3>
+    <h3>行程时间管理系统</h3>
     <el-menu-item
       v-for="item in noChildren"
       :key="item.name"
@@ -19,6 +18,7 @@
       <i :class="`el-icon-${item.icon}`"></i>
       <span slot="title">{{ item.label }}</span>
     </el-menu-item>
+
     <el-submenu
       v-for="item in hasChildren"
       :key="item.label"
@@ -69,26 +69,33 @@ export default {
   methods: {
     handleOpen() {},
     handleClose() {},
+    // 点击菜单
     clickMenu(item) {
-      if (this.$route.path !== item.path && !(this.$route.path === '/home' && item.path === '/')) {
+      if (
+        this.$route.path !== item.path &&
+        !(this.$route.path === '/home' && item.path === '/')
+      ) {
         this.$router.push(item.path);
       }
       this.$store.commit('selectTab', item);
+      console.log(item)
     },
   },
   computed: {
+    // 有子菜单
     hasChildren() {
       return this.menuData.filter((item) => item.children);
     },
+    // 无子菜单
     noChildren() {
       return this.menuData.filter((item) => !item.children);
     },
     menuData() {
       return JSON.parse(Cookie.get('menu')) || this.$store.state.tab.menu;
     },
-    isCollapse() {
-      return this.$store.state.tab.isCollapse;
-    },
+    activeMenu(){
+      return this.$store.state.tab.activeMenu
+    }
   },
 };
 </script>

@@ -10,9 +10,12 @@
 <script>
 import { postFlow, getLinkStatus } from "../../api";
 import * as echarts from "echarts";
+
 export default {
   data() {
-    return {};
+    return {
+      isDataLoaded: false, // 用于跟踪数据是否已加载
+    };
   },
   computed: {
     flowId() {
@@ -66,7 +69,7 @@ export default {
     },
   },
   methods: {
-    initCharts(FlowData) {
+    initCharts() {
       const linkFlow = echarts.init(this.$refs.linkFlow);
       const linkStatus = echarts.init(this.$refs.linkStatus);
 
@@ -101,6 +104,7 @@ export default {
           data: this.flowChartData[index] || [],
         })),
       });
+
       linkStatus.setOption({
         tooltip: {
           trigger: "item",
@@ -144,20 +148,29 @@ export default {
     },
   },
   mounted() {
-    if (!sessionStorage.getItem("flowData")) {
+    if (!sessionStorage.getItem("flowData")  ||!sessionStorage.getItem("linkStatus")) {
       postFlow(this.flowId).then((res) => {
         const flowData = res.data.data;
         sessionStorage.setItem("flowData", JSON.stringify(flowData));
+        this.isDataLoaded = true; // 数据加载完成后设置为 true
       });
-    }
-    if (!sessionStorage.getItem("linkStatus")) {
       getLinkStatus().then((res) => {
         const LinkStatus = res.data.data;
         console.log(LinkStatus);
         sessionStorage.setItem("LinkStatus", JSON.stringify(LinkStatus));
+        this.isDataLoaded = true; // 数据加载完成后设置为 true
       });
+    } else {
+      this.isDataLoaded = true;
     }
-    this.initCharts(this.flowData);
+
+  },
+  watch: {
+    isDataLoaded(newVal) {
+      if (newVal) {
+        this.initCharts(); // 当数据加载完成后初始化图表
+      }
+    },
   },
 };
 </script>

@@ -1,9 +1,6 @@
 <template>
   <div>
-    <div class="grid">
-      <span class="">请参考样例格式上传文件</span>
-      <el-button type="primary" @click="download">参考样例</el-button>
-    </div>
+    <Download fileName="example_order.csv"></Download>
     <el-upload
       ref="upload"
       action="#"
@@ -42,9 +39,13 @@
 </template>
 
 <script>
+import Download from "@/components/Download";
 import { getOrderQuery, postOrderQuery, postOrderImport } from "@/api";
 import { formatTime } from "@/utils/formatTime";
 export default {
+  components: {
+    Download,
+  },
   data() {
     return {
       form: {
@@ -75,12 +76,12 @@ export default {
     };
   },
   methods: {
-    download(){
-      this.$message.success("下载成功")
+    download() {
+      this.$message.success("下载成功");
     },
     onSubmit() {
       if (this.form.date) {
-        postOrderQuery({ "formatDate": this.formatDate }).then((res) => {
+        postOrderQuery({ formatDate: this.formatDate }).then((res) => {
           this.tableData = res.data.data;
         });
       } else {
@@ -100,7 +101,7 @@ export default {
       postOrderImport(formData)
         .then((response) => {
           console.log(response.data);
-          this.$message.success("上传成功");
+          this.$message.success(response.data.msg);
         })
         .catch((error) => {
           console.error(error);
@@ -134,5 +135,4 @@ export default {
 };
 </script>
 
-<style lang="less">
-</style>
+<style lang="less"></style>

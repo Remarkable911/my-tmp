@@ -38,6 +38,7 @@
 <script>
 import { getHome, getNet, postHome } from "@/api";
 import * as echarts from "echarts";
+import { mapState } from 'vuex';
 export default {
   data() {
     return {
@@ -45,11 +46,6 @@ export default {
       todayNum: "",
       link: { linkid: "2", linkavgtime: "19.3436", avgstatus: "1" },
     };
-  },
-  computed: {
-    driverId() {
-      return this.$store.state.user.driverId;
-    },
   },
   methods: {
     initCharts(HomeData, netTable) {
@@ -124,7 +120,7 @@ export default {
     ) {
       Promise.all([getHome({ driverId: this.driverId }), getNet()]).then(
         ([homeRes, netRes]) => {
-          console.log(this.driverId);
+          console.log("111",this.driverId);
           const HomeData = homeRes.data.data;
           const netTable = netRes.data;
           sessionStorage.setItem("homeData", JSON.stringify(HomeData));
@@ -139,6 +135,9 @@ export default {
     }
   },
   computed: {
+    ...mapState({
+      driverId:(state) => state.user.driverId
+    }),
     linkPro() {
       let status;
       switch (this.link.avgstatus) {
